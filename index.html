@@ -1,0 +1,491 @@
+<!DOCTYPE html><html lang="it"><script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>TCHECK</title><style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}body{font-family:system-ui;color:#fff;background:#000;display:flex;flex-direction:column;height:100dvh;overflow:hidden}button{cursor:pointer}
+body[data-theme="1"]{background:radial-gradient(1000px 500px at 50% -10%,#2dd4bf 0%,#0f5132 35%,#04120b 100%)}
+body[data-theme="2"]{background:radial-gradient(1000px 500px at 50% -10%,#c084fc 0%,#4c1d95 45%,#0b0618 100%)}
+body[data-theme="3"]{background:#000}
+body[data-theme="1"] .tab{background:radial-gradient(circle at 50% 30%,#2dd17f,#0d5c36 70%);border-color:#5b2c0a}
+body[data-theme="2"] .tab{background:radial-gradient(circle at 50% 30%,#a855f7,#2e1065 70%);border-color:#e9d5ff}
+body[data-theme="3"] .tab{background:radial-gradient(circle at 50% 30%,#333,#000 70%);border-color:#facc15}
+#lobby{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-y:auto;padding-bottom:80px}
+.card2{background:#fff;color:#111;border-radius:22px;padding:14px;width:100%;max-width:380px}.inp{width:100%;padding:12px;border:2px solid #ddd;border-radius:14px;font-size:15px;font-weight:700;margin:8px 0}
+.box{background:#111;color:#fff;border-radius:14px;padding:10px;margin-bottom:8px;border:2px solid #facc15}.box2{background:linear-gradient(135deg,#f97316,#ef4444);color:#fff;border-radius:14px;padding:10px;margin-bottom:8px}.box3{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;border-radius:14px;padding:10px;margin-bottom:8px}
+.bm{flex:1;border:0;border-radius:14px;padding:11px 4px;font-weight:900;font-size:12px}.bo{width:100%;display:flex;justify-content:space-between;align-items:center;background:#fff;border:2px solid #eee;border-radius:16px;padding:12px;margin-bottom:8px;cursor:pointer;color:#111;text-align:left}.bo b{font-size:15px}.bo small{display:block;font-size:11px;opacity:.6}.bo span{background:#fef3c7;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900}
+.bs{width:100%;border:0;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:19px;font-weight:900;padding:14px;border-radius:16px;margin-top:4px}
+.pop{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:none;align-items:flex-end;justify-content:center}.pop.show{display:flex}.pc{background:#fff;color:#111;border-radius:22px 22px 0 0;padding:16px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto;padding-bottom:80px}.pc h2{text-align:center;margin-bottom:10px}
+.op{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:14px;border:2px solid #eee;background:#f8fafc;margin-bottom:8px;cursor:pointer;text-align:left}.op.on{border-color:#111;background:#111;color:#fff}
+.bc{width:100%;border:0;background:#e5e7eb;padding:12px;border-radius:14px;font-weight:900;margin-top:6px}.bn{width:100%;border:0;background:#111;color:#fff;padding:12px;border-radius:14px;font-weight:900;margin-top:6px}
+.sg{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin:8px 0}.sb{background:#f8fafc;border-radius:12px;padding:8px 4px;text-align:center}.sb b{font-size:18px;display:block}.sb small{font-size:9px;font-weight:800}
+.cb{background:#fef3c7;border-radius:14px;padding:10px;margin-bottom:8px;text-align:center}.cr{display:flex;gap:6px;margin-top:8px}.cr button{flex:1;border:2px solid #111;border-radius:999px;padding:9px;font-weight:900;background:#fff}.cr button.on{background:#111;color:#fff}
+.si{display:flex;justify-content:space-between;gap:8px;background:#fff;border:2px solid #eee;border-radius:14px;padding:10px;margin-bottom:8px;text-align:left}.si small{display:block;font-size:11px;opacity:.7}.sbuy{border:0;background:#facc15;border-radius:999px;padding:8px 10px;font-weight:900;white-space:nowrap}.sbuy.g{background:#22c55e;color:#fff}
+.hero{background:linear-gradient(135deg,#facc15,#f97316,#ef4444);border-radius:18px;padding:14px;color:#fff;text-align:center}.hero.lose{background:#64748b}
+.pw{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin:12px 0;height:130px}.pcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}.pcol .pn{background:#fff;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:900;margin:4px 0}.pb{width:100%;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:22px}.p1 .pb{height:80px;background:#facc15}.p2 .pb{height:58px;background:#94a3b8}.p3 .pb{height:38px;background:#ea580c}
+#fw{position:fixed;inset:0;pointer-events:none;z-index:400;display:none;font-size:32px;text-align:center;padding-top:30%}
+.top{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;gap:6px}.pill{background:#111;color:#fff;border:2px solid #facc15;border-radius:999px;padding:7px 12px;font-weight:900;font-size:12px}.pillh{background:#facc15;color:#111;border:2px solid #fff;border-radius:999px;padding:7px 12px;font-weight:900;font-size:12px}
+.scb{display:flex;justify-content:space-between;background:#facc15;color:#111;margin:0 8px;border-radius:14px;padding:5px 10px}.opp{display:flex;gap:5px;padding:5px 8px}.op2{flex:1;background:rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.2);border-radius:12px;padding:5px;text-align:center}.op2.act{border-color:#facc15}.ban{margin:0 8px;background:#3b82f6;border-radius:12px;padding:6px;text-align:center;font-weight:900;font-size:13px}.msg{margin:5px 8px 0;background:#fff;color:#111;border-radius:12px;padding:6px;font-weight:700;font-size:12px;text-align:center;min-height:28px}
+.tab{flex:0 0 125px;min-height:125px;margin:4px 8px;border:4px solid #facc15;border-radius:22px;padding:4px 8px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at 50% 30%,#333,#000 70%)}.cen{display:flex;justify-content:center;gap:10px;align-items:center;margin:2px 0;flex:1}
+.cd{width:58px;height:82px;background:#fff;color:#111;border-radius:12px;padding:6px 5px;font-weight:900;font-size:17px;cursor:pointer;flex-shrink:0}.cd.red{color:#dc2626}.cd .bg{font-size:26px;text-align:center}.cd.jr{background:#991b1b;color:#fff}.cd.jb{background:#000;color:#fff}.cd.pl{outline:3px solid #facc15;transform:translateY(-4px)}.cd.bk{background:#1e3a8a;color:#fff;border:2px solid #facc15;text-align:center}
+.ctl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 8px 5px}.ctl button{border:0;border-radius:14px;padding:10px 4px;font-weight:900;font-size:12px}.eb{display:flex;gap:5px;padding:0 8px 5px;justify-content:center}.eb button{border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);border-radius:999px;padding:6px 9px;font-size:18px}.pb2{display:flex;gap:6px;padding:0 8px 5px;justify-content:center}.pb2 button{border:2px solid #facc15;background:#111;color:#fff;border-radius:999px;padding:7px 10px;font-weight:900;font-size:11px}
+.suit{margin:0 8px 5px;background:#fff;color:#111;border-radius:14px;padding:8px;display:none;text-align:center}.suit button{font-size:20px;padding:8px 10px;border-radius:12px;border:2px solid #eee;background:#f8fafc}
+.hw{flex-shrink:0;padding:0 6px 6px;background:rgba(0,0,0,.85);border-top:2px solid #facc15;position:relative;z-index:5}.ht{display:flex;justify-content:space-between;font-weight:900;font-size:11px;padding:4px}.ht span:last-child{background:#facc15;color:#111;padding:2px 8px;border-radius:999px}.hand{display:flex;flex-wrap:wrap;justify-content:center;min-height:78px;padding-bottom:6px}.hand .cd{width:52px;height:74px;font-size:14px;padding:4px 3px}.hand .cd .bg{font-size:22px}
+.tm{background:#111;border:2px solid #facc15;border-radius:999px;padding:4px 8px;font-weight:900;font-size:13px}.tm.u{background:#ef4444}.perf{background:linear-gradient(135deg,#a855f7,#ec4899);border-radius:12px;padding:8px;text-align:center;font-weight:900;font-size:12px;margin:0 8px;display:none}.perf.show{display:block}
+#toast{position:fixed;left:50%;top:35%;transform:translateX(-50%);background:#facc15;color:#111;border:3px solid #fff;border-radius:20px;padding:14px;text-align:center;z-index:510;display:none}
+</style></head><body>
+<div id="fw">🎆 🎇 ✨ 👑 🏆 🎉</div><div id="toast"><div style="font-size:30px">✨</div><b>MOSSA PERFETTA!</b><div id="toastT" style="font-size:12px"></div></div>
+<div id="lobby"><div style="display:flex;gap:8px;justify-content:center;width:100%;max-width:380px;margin-bottom:8px"><button onclick="openPop('menuH')" style="background:#111;color:#fff;border:2px solid #facc15;border-radius:999px;padding:8px 12px;font-weight:900">☰ MENU</button><div style="font-size:26px;font-weight:700">TCHECK <span style="color:#facc15">👑</span></div><button onclick="goHome()" style="background:#facc15;border:2px solid #fff;border-radius:999px;padding:8px 12px;font-weight:900">🏠 HOME</button></div>
+<div style="text-align:center"><div style="font-size:38px;font-weight:700">TCHECK <span style="color:#f59e0b">✨</span></div><div style="font-size:12px;opacity:.8">Tutto in uno schermo - 4 carte 👑</div></div>
+<div class="card2"><input class="inp" id="myName" value="LE DUC" maxlength="12">
+<div id="roomBar" style="display:none;background:#22c55e;color:#fff;border-radius:12px;padding:10px;text-align:center;font-weight:900;font-size:12px;margin:8px 0">🟢 STANZA: <span id="roomCodeTxt">-</span> - <span id="roomPeerTxt">Aspetto amici...</span><div id="roomPlayers" style="background:#fff;color:#111;border-radius:10px;padding:6px;margin-top:6px;font-size:12px">C'è: LE DUC</div><button id="roomStartBtn" onclick="startGame()" style="display:none;width:100%;border:0;background:#111;color:#fff;font-size:18px;font-weight:900;padding:14px;border-radius:14px;margin-top:8px">▶️ INIZIA PARTITA - GIOCA ORA</button><div id="roomWait" style="display:none;background:#facc15;color:#111;border-radius:10px;padding:8px;margin-top:8px">⏳ Aspetta che l'host prema INIZIA PARTITA...</div><div style="display:flex;gap:6px;margin-top:8px"><button onclick="inviteWA()" style="flex:1;border:0;background:#25D366;color:#fff;border-radius:10px;padding:8px;font-weight:900">💬 WHATSAPP</button><button onclick="inviteCopy()" style="flex:1;border:0;background:#fff;color:#111;border-radius:10px;padding:8px;font-weight:900">📋 COPIA CODICE</button></div></div>
+<div style="display:flex;gap:6px;margin-bottom:8px"><button class="bm" style="background:#22c55e;color:#fff" onclick="createRoom()">🏠 CREA STANZA</button><button class="bm" style="background:#3b82f6;color:#fff" onclick="joinRoom()">👥 ENTRA IN STANZA</button></div>
+<div class="box"><b id="pTitle">⭐ 👑 LE DUC</b> <span id="pBadge" style="background:#facc15;color:#111;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:900;float:right">SOLDATO</span><div style="font-size:11px;margin-top:4px" id="pDesc">Vinci per SCUDO!</div><div style="background:rgba(255,255,255,.25);border-radius:999px;height:8px;margin-top:6px;overflow:hidden"><div id="pBar" style="background:#facc15;height:100%;width:0%"></div></div><div style="font-size:10px;margin-top:4px" id="pProg">0 / 1 vittorie</div></div>
+<div class="box2"><b>📅 CALENDARIO DEL RE</b> <span style="background:#fff;color:#111;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:900;float:right">🔥 1 GIORNO</span><div style="font-size:11px;margin-top:4px">Hai giocato oggi!</div><div style="font-size:16px;margin-top:4px">🔥 ⬜ ⬜ ⬜ ⬜ ⬜ ⬜</div></div>
+<div class="box3"><b id="dTitle">🎯 SFIDA DI OGGI</b> <span id="dSt" style="background:#fff;color:#111;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:900;float:right">DA FARE</span><div style="font-size:12px;margin-top:4px" id="dDesc">Vinci 1 partita oggi!</div><div style="background:rgba(0,0,0,.3);border-radius:999px;height:8px;margin-top:6px;overflow:hidden"><div id="dBar" style="background:#facc15;height:100%;width:0%"></div></div><div style="font-size:10px;margin-top:4px" id="dProg">0 / 1</div></div>
+<div style="display:flex;gap:6px;margin-bottom:8px"><button class="bm" style="background:#3b82f6;color:#fff" onclick="openTut()">🎓 TUTORIAL</button><button class="bm" style="background:#f59e0b;color:#fff" onclick="openPop('statsP');renderStats()">📊 STATISTICHE</button><button class="bm" style="background:#ec4899;color:#fff" onclick="openPop('troP');renderTro()">🏆 TROFEI</button></div>
+<div style="display:flex;gap:6px;margin-bottom:8px"><button class="bm" style="background:#facc15" onclick="openPop('shopP');renderShop()">🛒 NEGOZIO</button><button class="bm" style="background:#22c55e;color:#fff" onclick="openPop('misP');renderMis()">🎯 MISSIONI</button><button class="bm" style="background:#a855f7;color:#fff" onclick="openPop('magP');renderMag()">📦 MAGAZZINO</button></div>
+<div style="text-align:center;font-weight:900;font-size:13px;margin-bottom:8px">🪙 <span id="cTxt"></span> ⭐ Lv <span id="lTxt">5</span> ⭐ XP: <span id="xTxt">0</span></div>
+<div style="background:#facc15;color:#111;border-radius:12px;padding:9px;text-align:center;font-weight:900;font-size:12px;margin-bottom:8px" id="champBar">🏆 Campionato: 0 / 15 - Trofei: 0</div>
+<div style="background:#fef3c7;border-radius:12px;padding:8px;text-align:center;font-weight:900;font-size:11px;margin-bottom:8px">✨ Mosse Perfette: <span id="pfT">0</span> - Serie: <span id="pfS">0</span>/3</div>
+<div style="background:#eff6ff;border-radius:14px;padding:10px;margin-bottom:8px"><b style="font-size:12px">📊 STATISTICHE</b><div class="sg"><div class="sb"><b id="sG">0</b><small>PARTITE</small></div><div class="sb"><b id="sW">0</b><small>VITTORIE</small></div><div class="sb"><b id="sF">0</b><small>1° POSTO</small></div><div class="sb"><b id="sR">0%</b><small>% VITTORIE</small></div></div><div style="font-size:11px;text-align:center" id="sD">Tocca a te LE DUC!</div></div>
+<div class="bo" onclick="openPop('modeP')"><div><b>🎮 MODALITÀ</b><small>Tocca per scegliere</small></div><span id="modeL">⚡ VELOCE ▸</span></div>
+<div class="bo" onclick="openPop('playP')"><div><b>👥 GIOCATORI</b><small>Avversari con nomi veri!</small></div><span id="playL">1vs1 ▸</span></div>
+<div class="bo" onclick="openPop('musP')"><div><b>🎵 MUSICA</b><small>Tocca per scegliere</small></div><span id="musL">🎹 CLASSICA ▸</span></div>
+<div style="background:#fef3c7;border-radius:12px;padding:8px;font-size:11px;font-weight:700">7 risponde a 7 di QUALSIASI seme! JOLLY si para solo con JOLLY opposto! 7 NON para JOLLY! J COMANDA! MOSSA PERFETTA = 3+ carte di fila, stesso colore / numero</div>
+<button class="bm" style="background:#3b82f6;color:#fff;width:100%;margin-top:8px" onclick="createRoom()">👥 INVITA AMICI +100</button>
+<button class="bs" onclick="startGame()">▶️ INIZIA PARTITA</button>
+<div style="font-size:10px;opacity:.5;margin-top:8px;text-align:center">Avversari: <span id="nextO">?</span></div>
+<div style="display:flex;gap:6px;margin-top:8px"><button class="bm" style="background:#25D366;color:#fff" onclick="inviteWA()">👥 INVITA</button><button class="bm" style="background:#111;color:#fff" onclick="openPop('menuH')">☰ MENU</button></div>
+<button class="bm" style="background:#facc15;width:100%;margin-top:8px" onclick="claimDaily()">🎁 BONUS +50</button></div></div>
+<div class="pop" id="shopP"><div class="pc"><h2>🛒 NEGOZIO</h2><p style="text-align:center;font-weight:800">Hai <b id="shopC">1050</b> 🪙</p><div id="shopG" style="margin:10px 0"></div><button class="bn" onclick="closePop('shopP')">✅ OK</button></div></div>
+<div class="pop" id="magP"><div class="pc"><h2>📦 MAGAZZINO</h2><div style="background:#111;color:#fff;border-radius:12px;padding:10px;text-align:center;font-weight:900;margin:8px 0" id="magC">1 oggetti</div><div style="background:#fef3c7;border-radius:12px;padding:8px;text-align:center;font-weight:900">👑 PER SEMPRE</div><div id="magG" style="margin:8px 0"></div><button class="bn" style="background:#f97316" onclick="closePop('magP');openPop('shopP');renderShop()">🛒 VAI AL NEGOZIO</button><button class="bn" onclick="closePop('magP')">✅ OK</button></div></div>
+<div class="pop" id="misP"><div class="pc"><h2>🎯 MISSIONI</h2><div id="misG"></div><button class="bn" onclick="closePop('misP')">✅ OK</button></div></div>
+<div class="pop" id="invP"><div class="pc"><h2>👥 INVITA AMICI</h2><p>Invita 1 amico = <b>+100 🪙</b></p><div style="background:#f8fafc;border-radius:12px;padding:10px;font-size:12px;font-weight:800;margin:8px 0" id="invT"></div><button class="bn" style="background:#25D366" onclick="inviteWA()">💬 WHATSAPP</button><button class="bn" onclick="inviteCopy()">📋 COPIA</button><button class="bc" onclick="closePop('invP')">✖️ CHIUDI</button></div></div>
+<div class="pop" id="troP"><div class="pc"><h2>🏆 TROFEI</h2><div id="troC">0 / 6</div><div id="troG" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div><button class="bn" onclick="closePop('troP')">✅ OK</button></div></div>
+<div class="pop" id="podP"><div class="pc"><div class="hero" id="podHero"><span style="font-size:54px" id="podEmo">🏆</span><h2 id="podTit">HAI VINTO!</h2><div id="podSub" style="font-weight:800">Grande LE DUC!</div></div><div class="pw" id="podW"></div><div id="podL"></div><div id="podS" style="background:#eff6ff;border-radius:12px;padding:10px;font-size:12px;font-weight:800;margin:8px 0;text-align:center"></div><div id="podT" style="background:#fef3c7;border-radius:12px;padding:10px;font-size:12px;font-weight:800;margin:8px 0;display:none;text-align:center"></div><button class="bn" id="podBtn" onclick="podMain()" style="background:#22c55e;font-size:16px;padding:14px">🔄 RIGIOCA!</button><div style="display:flex;gap:6px;margin-top:6px"><button class="bc" onclick="podHome()" style="flex:1">🏠 HOME</button><button class="bc" onclick="podChange()" style="flex:1">👥 CAMBIA GIOC.</button></div></div></div>
+<div class="pop" id="musP"><div class="pc"><h2>🎵 MUSICA</h2><div class="op on" id="m-classica" onclick="pickMus('classica')"><div><b>🎹 Classica</b></div><span>🎹</span></div><div class="op" id="m-jazz" onclick="pickMus('jazz')"><div><b>🎷 Jazz</b></div><span>🎷</span></div><div class="op" id="m-energetica" onclick="pickMus('energetica')"><div><b>⚡ Energetica</b></div><span>⚡</span></div><div class="op" id="m-relax" onclick="pickMus('relax')"><div><b>🌙 Relax</b></div><span>🌙</span></div><div class="op" id="m-nessuna" onclick="pickMus('nessuna')"><div><b>🔇 Nessuna</b></div><span>🔇</span></div><button class="bn" onclick="closePop('musP')">✅ OK</button></div></div>
+<div class="pop" id="setP"><div class="pc"><h2>⚙️ IMPOSTAZIONI</h2><div class="cb"><b>🌍 LINGUA</b><div class="cr"><button onclick="setLang('it')">🇮🇹 ITALIANO</button><button onclick="setLang('en')">🇬🇧 ENGLISH</button><button onclick="setLang('fr')">🇫🇷 FRANÇAIS</button></div><div style="font-size:12px;font-weight:800;margin-top:6px" id="langL">Ora: 🇮🇹 ITALIANO</div></div><div class="op" onclick="togSug()"><div><b>💡 SUGGERIMENTI</b><small id="sugL">Accesi</small></div><span>💡</span></div><div class="op" onclick="togMus()"><div><b>🎵 MUSICA</b><small id="musL2">Accesa</small></div><span>🎵</span></div><div class="op" onclick="togSnd()"><div><b>🔊 SUONI</b><small id="sndL">Accesi</small></div><span>🔊</span></div><div class="op" onclick="closePop('setP');openPop('modeP')"><div><b>🎮 MODALITÀ</b></div><span>🎮</span></div><div class="op" onclick="closePop('setP');changeName()"><div><b>👑 CAMBIA NOME</b></div><span>✏️</span></div><div class="cb"><b>🎨 GRAFICA</b><div class="cr"><button onclick="pickTh('1')">🟢 CASINÒ</button><button onclick="pickTh('2')">🟣 NEON</button><button onclick="pickTh('3')">⚫ LUXURY</button></div><div style="font-size:12px;font-weight:800;margin-top:6px" id="thL">Ora: ⚫ LUXURY</div></div><button class="bn" onclick="closePop('setP')">✅ FATTO</button></div></div>
+<div class="pop" id="menuH"><div class="pc"><h2>☰ MENU HOME</h2><div class="cb"><b>🌍 LINGUA</b><div class="cr"><button onclick="setLang('it')">🇮🇹 ITALIANO</button><button onclick="setLang('en')">🇬🇧 ENGLISH</button><button onclick="setLang('fr')">🇫🇷 FRANÇAIS</button></div></div><div class="cb"><b>🎨 GRAFICA</b><div class="cr"><button onclick="pickTh('1')">🟢 CASINÒ</button><button onclick="pickTh('2')">🟣 NEON</button><button onclick="pickTh('3')">⚫ LUXURY</button></div></div><div class="op" onclick="closePop('menuH');openTut()"><div><b>🎓 TUTORIAL</b></div><span>🎓</span></div><div class="op" onclick="closePop('menuH');openPop('statsP');renderStats()"><div><b>📊 STATISTICHE</b></div><span>📊</span></div><div class="op" onclick="closePop('menuH');openPop('troP');renderTro()"><div><b>🏆 TROFEI</b></div><span>🏆</span></div><div class="op" onclick="closePop('menuH');openPop('magP');renderMag()"><div><b>📦 MAGAZZINO</b></div><span>📦</span></div><div class="op" onclick="closePop('menuH');openPop('shopP');renderShop()"><div><b>🛒 NEGOZIO</b></div><span>🛒</span></div><div class="op" onclick="closePop('menuH');openPop('misP');renderMis()"><div><b>🎯 MISSIONI</b></div><span>🎯</span></div><div class="op" onclick="closePop('menuH');openPop('setP')"><div><b>⚙️ IMPOSTAZIONI</b></div><span>⚙️</span></div><div class="op" onclick="closePop('menuH');changeName()"><div><b>👑 CAMBIA NOME</b></div><span>✏️</span></div><div class="op" onclick="closePop('menuH');copyCode()"><div><b>🔑 COPIA CODICE</b></div><span>📋</span></div><div class="op" onclick="closePop('menuH');restoreCode()"><div><b>🔑 RIPRISTINA CODICE</b></div><span>🔑</span></div><div class="op" onclick="closePop('menuH');if(confirm('Azzerare tutto?'))resetStats()"><div><b>🗑️ AZZERA</b></div><span>🗑️</span></div><button class="bn" onclick="closePop('menuH')">✅ CHIUDI</button></div></div>
+<div class="pop" id="tutP"><div class="pc"><h2 id="tutT">🎓 COME SI GIOCA</h2><div style="font-size:48px;text-align:center" id="tutE">🃏</div><div style="background:#f8fafc;border-radius:14px;padding:12px;font-size:14px;font-weight:600;text-align:center;line-height:1.6" id="tutX"></div><div style="text-align:center;font-weight:800;margin-top:8px" id="tutD">● ○ ○</div><div style="display:flex;gap:6px;margin-top:10px"><button class="bc" onclick="tutStep(-1)" style="flex:1">⬅️ INDIETRO</button><button class="bn" id="tutN" onclick="tutStep(1)" style="flex:2">AVANTI ➡️</button></div><button class="bc" onclick="closePop('tutP')">✖️ CHIUDI</button></div></div>
+<div class="pop" id="statsP"><div class="pc"><h2>📊 STATISTICHE</h2><div style="font-weight:900;text-align:center" id="stTit">LE DUC</div><div class="sg"><div class="sb"><b id="sG2">0</b><small>PARTITE</small></div><div class="sb"><b id="sW2">0</b><small>VITTORIE</small></div><div class="sb"><b id="sF2">0</b><small>1° POSTO</small></div><div class="sb"><b id="sR2">0%</b><small>%</small></div></div><div style="background:#f8fafc;border-radius:14px;padding:12px;font-size:13px;font-weight:700;line-height:1.8" id="stFull"></div><div style="margin-top:10px;background:#fef3c7;border-radius:14px;padding:10px"><div style="font-weight:900">🔑 CODICE</div><div style="background:#111;color:#facc15;border-radius:12px;padding:10px;font-family:monospace;font-weight:900;word-break:break-all" id="stCode">---</div><button class="bn" onclick="copyCode()">📋 COPIA CODICE</button><button class="bc" onclick="restoreCode()">🔑 RIPRISTINA</button></div><button class="bn" onclick="closePop('statsP')">✅ OK</button><button class="bc" onclick="resetStats()">🗑️ AZZERA</button></div></div>
+<div class="pop" id="modeP"><div class="pc"><h2>🎮 MODALITÀ</h2><div class="op" id="o-veloce" onclick="pickMode('veloce')"><div><b>⚡ Veloce</b><small>1 mano secca</small></div><span>⚡</span></div><div class="op" id="o-campionato" onclick="pickMode('campionato')"><div><b>🏆 Campionato</b><small id="campSub">Primo a 15</small></div><span>🏆</span></div><div class="op" id="o-carriera" onclick="pickMode('carriera')"><div><b>🎯 Carriera</b><small>Se sei 1° sali!</small></div><span>🎯</span></div><div class="op" id="o-inferno" onclick="pickMode('inferno')"><div><b>🔥 INFERNO</b><small>Timer 10s!</small></div><span>🔥</span></div><div class="cb"><div style="font-weight:900" id="champL">🏆 Punti campionato: 0 / 15</div><div class="cr"><button id="c-9" onclick="pickChamp(9)">9</button><button id="c-15" onclick="pickChamp(15)">15</button><button id="c-21" onclick="pickChamp(21)">21</button><button id="c-30" onclick="pickChamp(30)">30</button></div><div style="font-size:12px;font-weight:800;margin-top:6px">🏆 Vittoria = +3 🥈 2° = +1</div></div><button class="bn" onclick="closePop('modeP')">✅ OK</button></div></div>
+<div class="pop" id="playP"><div class="pc"><h2>👥 GIOCATORI</h2><div class="op on" id="p-2" onclick="pickPlay(2)"><div><b>1 vs 1</b></div><span>👤</span></div><div class="op" id="p-3" onclick="pickPlay(3)"><div><b>3 Giocatori</b></div><span>👥</span></div><div class="op" id="p-4" onclick="pickPlay(4)"><div><b>4 Giocatori</b></div><span>👥</span></div><div class="op" id="p-5" onclick="pickPlay(5)"><div><b>5 Giocatori</b></div><span>👥</span></div><button class="bn" onclick="closePop('playP')">✅ OK</button></div></div>
+<div class="pop" id="menuP"><div class="pc"><h2>☰ MENU</h2><div style="background:#fef3c7;border-radius:10px;padding:6px;font-size:11px;font-weight:900;text-align:center">⏸️ TIMER IN PAUSA</div><div class="op" onclick="closeMenu();openPop('setP')"><div><b>⚙️ IMPOSTAZIONI</b></div><span>⚙️</span></div><div class="op" onclick="closeMenu();openPop('troP');renderTro()"><div><b>🏆 TROFEI</b></div><span>🏆</span></div><div class="op" onclick="closeMenu();openPop('magP');renderMag()"><div><b>📦 MAGAZZINO</b></div><span>📦</span></div><div class="op" onclick="closeMenu();openPop('shopP');renderShop()"><div><b>🛒 NEGOZIO</b></div><span>🛒</span></div><div class="op" onclick="closeMenu();openTut()"><div><b>🎓 TUTORIAL</b></div><span>🎓</span></div><div class="op" onclick="if(confirm('Ricominciare?')){closeMenu();startGame()}"><div><b>🔄 RICOMINCIA</b></div><span>🔄</span></div><div class="op" onclick="closeMenu();goHome()"><div><b>🏠 HOME</b></div><span>🏠</span></div><button class="bn" onclick="closeMenu()">▶️ RIPRENDI</button></div></div>
+<div id="game" style="display:none;flex:1;flex-direction:column;min-height:0;height:100dvh;overflow-y:auto">
+<div class="top"><div style="font-weight:700">TCHECK <span style="color:#facc15">✨</span></div><div style="background:#facc15;color:#111;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900" id="modeB">⚡ VELOCE</div><div class="tm" id="tmBox">⏱️ <span id="tm">30</span>s</div><div style="display:flex;gap:4px"><div class="pill" onclick="openMenu()">☰ MENU</div><div class="pillh" onclick="goHome()">🏠 HOME</div></div></div>
+<div class="scb"><div><small id="lab1">TU</small> <b id="sc1">0</b></div><div style="text-align:center"><div style="font-size:10px;font-weight:800" id="scLab">MANO</div><div style="font-size:15px;font-weight:900" id="scC">1</div></div><div style="text-align:right"><small>AVVERS.</small> <b id="sc2">0</b></div></div>
+<div class="opp" id="opps"></div><div class="ban" id="banner">IN ATTESA...</div><div class="perf" id="perfB">✨ MOSSA PERFETTA IN CORSO: <span id="perfC">0</span> carte!</div><div class="msg" id="msg">Connessione...</div>
+<div class="tab"><div style="display:flex;justify-content:space-between;font-weight:800;font-size:11px"><div id="oppN">TAVOLO</div><div style="background:rgba(0,0,0,.4);padding:4px 8px;border-radius:999px">🃏 Mazzo: <span id="deckC">--</span> - Scarti: <span id="discC">0</span></div></div><div class="cen"><div class="cd bk" onclick="drawCard()">🂠<br><small style="font-size:9px">PESCA</small></div><div id="center"></div></div><div style="text-align:center;font-size:11px;font-weight:800" id="turn">---</div></div>
+<div class="suit" id="suitBox"><div style="font-weight:900">J COMANDA! Scegli il seme:</div><div style="display:flex;gap:6px;justify-content:center;margin-top:6px"><button onclick="chooseSuit('♥️')">♥️</button><button onclick="chooseSuit('♦️')">♦️</button><button onclick="chooseSuit('♣️')">♣️</button><button onclick="chooseSuit('♠️')">♠️</button></div></div>
+<div class="pb2"><button onclick="useShield()">🛡️ SCUDO <span id="nSh">0</span></button><button onclick="useDouble()">🔥 x2 <span id="nDo">0</span></button><button onclick="useJolly()">⭐ JOLLY <span id="nJo">0</span></button></div>
+<div class="eb"><button onclick="sendEmo('😂')">😂</button><button onclick="sendEmo('😈')">😈</button><button onclick="sendEmo('😱')">😱</button><button onclick="sendEmo('🔥')">🔥</button><button onclick="sendEmo('👑')">👑</button><button onclick="sendEmo('🤯')">🤯</button><button onclick="sendEmo('😎')">😎</button><button onclick="sendEmo('🙏')">🙏</button></div>
+<div class="ctl"><button style="background:#facc15" onclick="drawCard()">🎴 PESCA</button><button style="background:#ef4444;color:#fff" id="bT" onclick="sayT()">📢 TCHECK</button><button style="background:#22c55e;color:#fff" id="bG" onclick="sayG()">🏆 GAMES</button></div>
+<div class="hw"><div class="ht"><span id="hTit">LE TUE CARTE</span><span id="myC">4</span></div><div class="hand" id="hand"></div></div></div>
+<script>
+var curLang="it";try{curLang=localStorage.getItem("tcheck_lang")||"it";}catch(e){}
+var PHRASE={"MENU":{en:"MENU",fr:"MENU"},"HOME":{en:"HOME",fr:"ACCUEIL"},"TUTORIAL":{en:"TUTORIAL",fr:"TUTORIEL"},"STATISTICHE":{en:"STATISTICS",fr:"STATISTIQUES"},"TROFEI":{en:"TROPHIES",fr:"TROPHÉES"},"NEGOZIO":{en:"SHOP",fr:"BOUTIQUE"},"MISSIONI":{en:"MISSIONS",fr:"MISSIONS"},"MAGAZZINO":{en:"WAREHOUSE",fr:"ENTREPÔT"},"INVITA AMICI +100":{en:"INVITE FRIENDS +100",fr:"INVITER AMIS +100"},"INVITA":{en:"INVITE",fr:"INVITER"},"INIZIA PARTITA":{en:"START GAME",fr:"COMMENCER LA PARTIE"},"BONUS +50":{en:"BONUS +50",fr:"BONUS +50"},"MODALITÀ":{en:"MODE",fr:"MODE"},"GIOCATORI":{en:"PLAYERS",fr:"JOUEURS"},"MUSICA":{en:"MUSIC",fr:"MUSIQUE"},"IMPOSTAZIONI":{en:"SETTINGS",fr:"PARAMÈTRES"},"GRAFICA":{en:"GRAPHICS",fr:"GRAPHIQUE"},"LINGUA":{en:"LANGUAGE",fr:"LANGUE"},"CAMBIA NOME":{en:"CHANGE NAME",fr:"CHANGER NOM"},"COPIA CODICE":{en:"COPY CODE",fr:"COPIER CODE"},"RIPRISTINA CODICE":{en:"RESTORE CODE",fr:"RESTAURER CODE"},"AZZERA":{en:"RESET",fr:"RÉINITIALISER"},"CHIUDI":{en:"CLOSE",fr:"FERMER"},"FATTO":{en:"DONE",fr:"TERMINÉ"},"OK":{en:"OK",fr:"OK"},"PESCA":{en:"DRAW",fr:"PIOCHER"},"TCHECK":{en:"TCHECK",fr:"TCHECK"},"GAMES":{en:"GAMES",fr:"GAMES"},"SUGGERIMENTI":{en:"HINTS",fr:"CONSEILS"},"SUONI":{en:"SOUNDS",fr:"SONS"},"VAI AL NEGOZIO":{en:"GO TO SHOP",fr:"ALLER À LA BOUTIQUE"},"RIGIOCA!":{en:"PLAY AGAIN!",fr:"REJOUER !"},"CAMBIA GIOC.":{en:"CHANGE PLAYERS",fr:"CHANGER JOUEURS"},"RIPRENDI":{en:"RESUME",fr:"REPRENDRE"},"RICOMINCIA":{en:"RESTART",fr:"RECOMMENCER"},"CAMPIONATO":{en:"CHAMPIONSHIP",fr:"CHAMPIONNAT"},"CARRIERA":{en:"CAREER",fr:"CARRIÈRE"},"INFERNO":{en:"HELL",fr:"ENFER"},"Veloce":{en:"Quick",fr:"Rapide"},"SFIDA DI OGGI":{en:"TODAY'S CHALLENGE",fr:"DÉFI DU JOUR"},"CALENDARIO DEL RE":{en:"KING'S CALENDAR",fr:"CALENDRIER DU ROI"},"PARTITE":{en:"GAMES",fr:"PARTIES"},"VITTORIE":{en:"WINS",fr:"VICTOIRES"},"1° POSTO":{en:"1ST PLACE",fr:"1ÈRE PLACE"},"% VITTORIE":{en:"% WINS",fr:"% VICTOIRES"},"INVITA AMICI":{en:"INVITE FRIENDS",fr:"INVITER AMIS"},"WHATSAPP":{en:"WHATSAPP",fr:"WHATSAPP"},"COPIA":{en:"COPY",fr:"COPIER"},"COME SI GIOCA":{en:"HOW TO PLAY",fr:"COMMENT JOUER"},"INDIETRO":{en:"BACK",fr:"RETOUR"},"AVANTI ➡️":{en:"NEXT ➡️",fr:"SUIVANT ➡️"},"LE TUE CARTE":{en:"YOUR CARDS",fr:"TES CARTES"},"TAVOLO":{en:"TABLE",fr:"TABLE"},"Mazzo:":{en:"Deck:",fr:"Paquet :"},"Scarti:":{en:"Discards:",fr:"Défausse :"}};
+var DICT={"Vinci per SCUDO!":{en:"Win for SHIELD!",fr:"Gagne pour BOUCLIER !"},"Hai giocato oggi!":{en:"You played today!",fr:"Tu as joué aujourd'hui !"},"Vinci 1 partita oggi!":{en:"Win 1 game today!",fr:"Gagne 1 partie aujourd'hui !"},"Tocca a te LE DUC!":{en:"Your turn LE DUC!",fr:"À toi LE DUC !"},"Tutto in uno schermo - 4 carte":{en:"All in one screen - 4 cards",fr:"Tout sur un écran - 4 cartes"},"Avversari con nomi veri!":{en:"Opponents with real names!",fr:"Adversaires avec vrais noms !"},"Tocca per scegliere":{en:"Tap to choose",fr:"Appuie pour choisir"},"Avversari:":{en:"Opponents:",fr:"Adversaires :"},"Dorso FUOCO":{en:"FIRE Back",fr:"Dos FEU"},"Dorso DIAMANTE":{en:"DIAMOND Back",fr:"Dos DIAMANT"},"Dorso DIAMANTE PRO":{en:"DIAMOND PRO Back",fr:"Dos DIAMANT PRO"},"Dorso INFERNO":{en:"HELL Back",fr:"Dos ENFER"},"Dorso CAMPIONE":{en:"CHAMPION Back",fr:"Dos CHAMPION"},"Avatar FULMINE":{en:"LIGHTNING Avatar",fr:"Avatar ÉCLAIR"},"Titolo IL RE":{en:"Title THE KING",fr:"Titre LE ROI"},"Tavolo NEON":{en:"NEON Table",fr:"Table NÉON"},"CORONA D'ORO":{en:"GOLDEN CROWN",fr:"COURONNE D'OR"},"Per sempre":{en:"Forever",fr:"Pour toujours"},"Per sempre - TUO":{en:"Forever - YOURS",fr:"Pour toujours - À TOI"},"1 volta non peschi":{en:"1 time you don't draw",fr:"1 fois tu ne pioches pas"},"Butti 2 carte":{en:"Play 2 cards",fr:"Joue 2 cartes"},"Butti qualsiasi carta":{en:"Play any card",fr:"Joue n'importe quelle carte"},"PREMIO - Vinci Campionato":{en:"PRIZE - Win Championship",fr:"PRIX - Gagne Championnat"},"Vinci 1 partita":{en:"Win 1 game",fr:"Gagne 1 partie"},"Invita 1 amico":{en:"Invite 1 friend",fr:"Invite 1 ami"},"Sfida di Oggi":{en:"Today's Challenge",fr:"Défi du Jour"},"3 Mosse Perfette di fila":{en:"3 Perfect Moves in a row",fr:"3 Coups Parfaits d'affilée"},"Non hai abbastanza monete!":{en:"Not enough coins!",fr:"Pas assez de pièces !"},"Hai gia preso il bonus!":{en:"You already took the bonus!",fr:"Tu as déjà pris le bonus !"},"Hai gia usato DOPPIA!":{en:"You already used DOUBLE!",fr:"Tu as déjà utilisé DOUBLE !"},"Non hai SCUDO! 800":{en:"No SHIELD! 800",fr:"Pas de BOUCLIER ! 800"},"Vinci un Campionato per sbloccarlo!":{en:"Win a Championship to unlock it!",fr:"Gagne un Championnat pour le débloquer !"},"Azzerare tutto?":{en:"Reset everything?",fr:"Tout réinitialiser ?"},"Hai giocato":{en:"You played",fr:"Tu as joué"},"vinto":{en:"won",fr:"gagné"},"DA FARE":{en:"TO DO",fr:"À FAIRE"},"FATTA":{en:"DONE",fr:"FAITE"},"1 GIORNO":{en:"1 DAY",fr:"1 JOUR"},"3 GIORNI":{en:"3 DAYS",fr:"3 JOURS"},"1 mano secca":{en:"1 quick hand",fr:"1 manche rapide"},"Primo a 15":{en:"First to 15",fr:"Premier à 15"},"Se sei 1° sali!":{en:"If you are 1st you go up!",fr:"Si tu es 1er tu montes !"},"Timer 10s!":{en:"10s timer!",fr:"Timer 10s !"},"Vittoria = +3":{en:"Win = +3",fr:"Victoire = +3"},"2° = +1":{en:"2nd = +1",fr:"2e = +1"},"PER SEMPRE":{en:"FOREVER",fr:"POUR TOUJOURS"},"1 oggetti":{en:"1 item",fr:"1 objet"},"oggetti - Equipaggiato:":{en:"items - Equipped:",fr:"objets - Équipé :"},"EQUIPAGGIATO":{en:"EQUIPPED",fr:"ÉQUIPÉ"},"EQUIPAGGIA":{en:"EQUIP",fr:"ÉQUIPER"},"COMPRA -":{en:"BUY -",fr:"ACHETER -"},"PREMIO":{en:"PRIZE",fr:"PRIX"},"MAGAZZINO":{en:"WAREHOUSE",fr:"ENTREPÔT"},"Hai:":{en:"You have:",fr:"Tu as :"},"Invita 1 amico =":{en:"Invite 1 friend =",fr:"Invite 1 ami ="},"Gioca a TCHECK con me!":{en:"Play TCHECK with me!",fr:"Joue à TCHECK avec moi !"},"Sono":{en:"I am",fr:"Je suis"},"Codice:":{en:"Code:",fr:"Code :"},"PRIMA VITTORIA":{en:"FIRST WIN",fr:"PREMIÈRE VICTOIRE"},"SERIE DI 3":{en:"STREAK OF 3",fr:"SÉRIE DE 3"},"SCUDO DEL 7":{en:"SHIELD OF 7",fr:"BOUCLIER DU 7"},"MAESTRO JOLLY":{en:"JOLLY MASTER",fr:"MAÎTRE JOLLY"},"PERFETTO":{en:"PERFECT",fr:"PARFAIT"},"RE DI TCHECK":{en:"KING OF TCHECK",fr:"ROI DE TCHECK"},"Vinci 1 partita":{en:"Win 1 game",fr:"Gagne 1 partie"},"Para 5 volte il 7":{en:"Block 7 five times",fr:"Bloque 7 cinq fois"},"Para 3 JOLLY":{en:"Block 3 JOLLY",fr:"Bloque 3 JOLLY"},"Fai 1 Mossa Perfetta":{en:"Make 1 Perfect Move",fr:"Fais 1 Coup Parfait"},"Vinci 10 partite":{en:"Win 10 games",fr:"Gagne 10 parties"},"SOLDATO":{en:"SOLDIER",fr:"SOLDAT"},"CAPITANO":{en:"CAPTAIN",fr:"CAPITAINE"},"LE DUC":{en:"LE DUC",fr:"LE DUC"},"LEGGENDA":{en:"LEGEND",fr:"LÉGENDE"},"vittorie":{en:"wins",fr:"victoires"},"Titolo:":{en:"Title:",fr:"Titre :"},"Mani:":{en:"Hands:",fr:"Manches :"},"Vinte:":{en:"Won:",fr:"Gagnées :"},"Carriera:":{en:"Career:",fr:"Carrière :"},"Serie:":{en:"Streak:",fr:"Série :"},"Mosse Perfette:":{en:"Perfect Moves:",fr:"Coups Parfaits :"},"Campionato:":{en:"Championship:",fr:"Championnat :"},"Trofei:":{en:"Trophies:",fr:"Trophées :"},"Punti campionato:":{en:"Championship points:",fr:"Points championnat :"},"Primo a":{en:"First to",fr:"Premier à"},"Vinci per":{en:"Win for",fr:"Gagne pour"},"IN ATTESA...":{en:"WAITING...",fr:"EN ATTENTE..."},"Connessione...":{en:"Connecting...",fr:"Connexion..."},"TURNO DI:":{en:"TURN OF:",fr:"TOUR DE :"},"TOCCA A TE!":{en:"YOUR TURN!",fr:"C'EST À TOI !"},"HAI VINTO!":{en:"YOU WON!",fr:"TU AS GAGNÉ !"},"HAI FINITO!":{en:"YOU FINISHED!",fr:"TU AS FINI !"},"DISTRIBUZIONE...":{en:"DEALING...",fr:"DISTRIBUTION..."},"Mescolo...":{en:"Shuffling...",fr:"Mélange..."},"Peschi":{en:"You draw",fr:"Tu pioches"},"Hai parato il 7!":{en:"You blocked the 7!",fr:"Tu as bloqué le 7 !"},"Hai parato il JOLLY!":{en:"You blocked the JOLLY!",fr:"Tu as bloqué le JOLLY !"},"HA DIMENTICATO TCHECK!":{en:"FORGOT TCHECK!",fr:"A OUBLIÉ TCHECK !"},"HA DIMENTICATO GAMES!":{en:"FORGOT GAMES!",fr:"A OUBLIÉ GAMES !"},"GAMES! HA FINITO!":{en:"GAMES! FINISHED!",fr:"GAMES ! FINI !"},"J COMANDA":{en:"J COMMANDS",fr:"J COMMANDE"},"Scegli il seme:":{en:"Choose the suit:",fr:"Choisis la couleur :"},"Tempo scaduto!":{en:"Time's up!",fr:"Temps écoulé !"},"Aspetta...":{en:"Wait...",fr:"Attends..."},"sta giocando":{en:"is playing",fr:"est en train de jouer"},"gioca":{en:"plays",fr:"joue"},"JOLLY ROSSO":{en:"RED JOLLY",fr:"JOLLY ROUGE"},"JOLLY NERO":{en:"BLACK JOLLY",fr:"JOLLY NOIR"},"MOSSA PERFETTA!":{en:"PERFECT MOVE!",fr:"COUP PARFAIT !"},"carte di fila":{en:"cards in a row",fr:"cartes d'affilée"},"Devi giocare":{en:"You must play",fr:"Tu dois jouer"},"Non puoi giocare questa!":{en:"You can't play this!",fr:"Tu ne peux pas jouer ça !"},"La J si butta SOLO con stesso seme":{en:"J only with same suit",fr:"J seulement avec même couleur"},"SCUDO! Non peschi!":{en:"SHIELD! You don't draw!",fr:"BOUCLIER ! Tu ne pioches pas !"},"DOPPIA! Butta ancora una carta!":{en:"DOUBLE! Play another card!",fr:"DOUBLE ! Joue encore une carte !"},"JOLLY SHOP! Butta QUALSIASI carta!":{en:"JOLLY SHOP! Play ANY card!",fr:"JOLLY SHOP ! Joue N'IMPORTE quelle carte !"},"SCUDO si usa quando devi pescare!":{en:"SHIELD when you must draw!",fr:"BOUCLIER quand tu dois piocher !"},"HAI 1 CARTA! PREMI TCHECK!":{en:"YOU HAVE 1 CARD! PRESS TCHECK!",fr:"TU AS 1 CARTE ! APPUIE TCHECK !"},"Clicca una carta gialla!":{en:"Click a yellow card!",fr:"Clique une carte jaune !"},"JOLLY! Solo":{en:"JOLLY! Only",fr:"JOLLY ! Seulement"},"ROSSE":{en:"RED",fr:"ROUGES"},"NERE":{en:"BLACK",fr:"NOIRES"},"Solo il 1° sale!":{en:"Only 1st goes up!",fr:"Seul le 1er monte !"},"Sei":{en:"You are",fr:"Tu es"},"Rivincita?":{en:"Rematch?",fr:"Revanche ?"},"CLASSIFICA FINALE":{en:"FINAL RANKING",fr:"CLASSEMENT FINAL"},"SEI IL CAMPIONE":{en:"YOU ARE THE CHAMPION",fr:"TU ES LE CHAMPION"},"CAMPIONE!":{en:"CHAMPION!",fr:"CHAMPION !"},"LIVELLO SUPERATO!":{en:"LEVEL PASSED!",fr:"NIVEAU RÉUSSI !"},"HAI VINTO L'INFERNO!":{en:"YOU WON HELL!",fr:"TU AS GAGNÉ L'ENFER !"},"Grande":{en:"Great",fr:"Bravo"},"Sei il RE!":{en:"You are the KING!",fr:"Tu es le ROI !"},"MANO":{en:"HAND",fr:"MANCHE"},"LIVELLO":{en:"LEVEL",fr:"NIVEAU"},"AVVERS.":{en:"OPP.",fr:"ADV."},"TU":{en:"YOU",fr:"TOI"},"FINITO":{en:"FINISHED",fr:"FINI"},"VAI AL LIVELLO":{en:"GO TO LEVEL",fr:"VA AU NIVEAU"},"RIPROVA LIVELLO":{en:"RETRY LEVEL",fr:"RÉESSAYER NIVEAU"},"NUOVO CAMPIONATO":{en:"NEW CHAMPIONSHIP",fr:"NOUVEAU CHAMPIONNAT"},"PROSSIMA MANO":{en:"NEXT HAND",fr:"MANCHE SUIVANTE"},"TCHECK!":{en:"TCHECK!",fr:"TCHECK !"},"GAMES!":{en:"GAMES!",fr:"GAMES !"},"COMANDA":{en:"COMMANDS",fr:"COMMANDE"},"Inizia":{en:"Starts",fr:"Commence"},"Pesca":{en:"Draw",fr:"Pioche"},"Solo":{en:"Only",fr:"Seulement"},"HAI VINTO L'INFERNO":{en:"YOU WON HELL",fr:"TU AS GAGNÉ L'ENFER"},"Accesi":{en:"On",fr:"Activés"},"Spenti":{en:"Off",fr:"Éteints"},"Accesa":{en:"On",fr:"Activée"},"Spenta":{en:"Off",fr:"Éteinte"},"Ora:":{en:"Now:",fr:"Maintenant :"},"ITALIANO":{en:"ITALIAN",fr:"ITALIEN"},"ENGLISH":{en:"ENGLISH",fr:"ANGLAIS"},"FRANÇAIS":{en:"FRENCH",fr:"FRANÇAIS"},"CASINÒ":{en:"CASINO",fr:"CASINO"},"NEON":{en:"NEON",fr:"NÉON"},"LUXURY":{en:"LUXURY",fr:"LUXE"},"Classica":{en:"Classic",fr:"Classique"},"Jazz":{en:"Jazz",fr:"Jazz"},"Energetica":{en:"Energetic",fr:"Énergique"},"Relax":{en:"Relax",fr:"Relax"},"Nessuna":{en:"None",fr:"Aucune"},"COME SI GIOCA":{en:"HOW TO PLAY",fr:"COMMENT JOUER"},"SCOPO":{en:"GOAL",fr:"BUT"},"TCHECK E GAMES":{en:"TCHECK AND GAMES",fr:"TCHECK ET GAMES"},"REGOLA DEL 7":{en:"RULE OF 7",fr:"RÈGLE DU 7"},"JOLLY":{en:"JOLLY",fr:"JOLLY"},"J COMANDA":{en:"J COMMANDS",fr:"J COMMANDE"},"MOSSA PERFETTA":{en:"PERFECT MOVE",fr:"COUP PARFAIT"},"PRESE IN GIRO":{en:"TAUNTS",fr:"MOQUERIES"},"BOT":{en:"BOT",fr:"BOT"},"NEGOZIO":{en:"SHOP",fr:"BOUTIQUE"},"Butta tutte le tue carte!":{en:"Play all your cards!",fr:"Joue toutes tes cartes !"},"Inizi con":{en:"You start with",fr:"Tu commences avec"},"carte":{en:"cards",fr:"cartes"},"Giochi":{en:"You play",fr:"Tu joues"},"uguale di":{en:"same",fr:"même"},"SEME":{en:"SUIT",fr:"COULEUR"},"NUMERO":{en:"NUMBER",fr:"NUMÉRO"},"Se non hai niente,":{en:"If you have nothing,",fr:"Si tu n'as rien,"},"PESCHI 1":{en:"DRAW 1",fr:"PIOCHE 1"},"Con":{en:"With",fr:"Avec"},"carta":{en:"card",fr:"carte"},"premi":{en:"press",fr:"appuie"},"Per la":{en:"For the",fr:"Pour la"},"ULTIMA":{en:"LAST",fr:"DERNIÈRE"},"Se dimentichi, peschi 2!":{en:"If you forget, draw 2!",fr:"Si tu oublies, pioche 2 !"},"RISPONDE A 7 DI QUALSIASI SEME!":{en:"ANSWERS TO 7 OF ANY SUIT!",fr:"RÉPOND À 7 DE N'IMPORTE QUELLE COULEUR !"},"ROSSO si para con 7 qualsiasi o JOLLY ROSSO":{en:"RED blocked with any 7 or RED JOLLY",fr:"ROUGE bloqué avec n'importe quel 7 ou JOLLY ROUGE"},"NERO si para con 7 qualsiasi o JOLLY NERO":{en:"BLACK blocked with any 7 or BLACK JOLLY",fr:"NOIR bloqué avec n'importe quel 7 ou JOLLY NOIR"},"si para SOLO con":{en:"only blocked with",fr:"bloqué SEULEMENT avec"},"Dopo JOLLY ROSSO devi giocare NERA! Dopo JOLLY NERO devi giocare ROSSA!":{en:"After RED JOLLY play BLACK! After BLACK JOLLY play RED!",fr:"Après JOLLY ROUGE joue NOIR ! Après JOLLY NOIR joue ROUGE !"},"Il 7 NON para il JOLLY!":{en:"7 does NOT block JOLLY!",fr:"Le 7 ne bloque PAS le JOLLY !"},"La J si butta":{en:"J only played",fr:"Le J se joue"},"SOLO":{en:"ONLY",fr:"SEULEMENT"},"con lo":{en:"with the",fr:"avec la"},"stesso seme":{en:"same suit",fr:"même couleur"},"del centro,":{en:"as center,",fr:"que le centre,"},"oppure J su J":{en:"or J on J",fr:"ou J sur J"},"Il prossimo deve buttare seme comandato, oppure J, oppure JOLLY NERO!":{en:"Next must play commanded suit, or J, or BLACK JOLLY!",fr:"Le prochain doit jouer couleur commandée, ou J, ou JOLLY NOIR !"},"senza che avversario butti una carta normale, rispettando colore / numero.":{en:"without opponent playing normal card, same color / number.",fr:"sans que l'adversaire joue une carte normale, même couleur / numéro."},"Nera su nera, rossa su rossa. Oppure stesso numero: 2 su 2, 7 su 7, 8 su 8.":{en:"Black on black, red on red. Or same number: 2 on 2, 7 on 7, 8 on 8.",fr:"Noir sur noir, rouge sur rouge. Ou même numéro : 2 sur 2, 7 sur 7, 8 sur 8."},"ASSO salta, ritocca a te. 7 CHECK pesca 2. JOLLY pesca 4.":{en:"ACE skips, back to you. 7 CHECK draw 2. JOLLY draw 4.",fr:"AS saute, à toi. 7 CHECK pioche 2. JOLLY pioche 4."},"Se lui risponde con 7/Jolly e tu ributti 7/Jolly, e SEMPRE perfetta.":{en:"If he answers with 7/Jolly and you play 7/Jolly again, still perfect.",fr:"S'il répond avec 7/Jolly et tu rejoue 7/Jolly, toujours parfait."},"Premi le emoji in partita!":{en:"Press emojis in game!",fr:"Appuie les emojis en partie !"},"MARIO Aggressivo - LUCA Furbo - GIULIA Pazza":{en:"MARIO Aggressive - LUCA Smart - GIULIA Crazy",fr:"MARIO Agressif - LUCA Malin - GIULIA Folle"},"CAMPIONATO: 9/15/21/30 - Vittoria +3, 2° +1":{en:"CHAMPIONSHIP: 9/15/21/30 - Win +3, 2nd +1",fr:"CHAMPIONNAT : 9/15/21/30 - Victoire +3, 2e +1"},"INFERNO: timer 10s!":{en:"HELL: 10s timer!",fr:"ENFER : timer 10s !"},"NEGOZIO: SCUDO, DOPPIA, JOLLY SHOP":{en:"SHOP: SHIELD, DOUBLE, JOLLY SHOP",fr:"BOUTIQUE : BOUCLIER, DOUBLE, JOLLY SHOP"},"TIMER IN PAUSA":{en:"TIMER PAUSED",fr:"TIMER EN PAUSE"},"RICOMINCIA":{en:"RESTART",fr:"RECOMMENCER"},"MENU":{en:"MENU",fr:"MENU"},"HOME":{en:"HOME",fr:"ACCUEIL"},"CREA STANZA":{en:"CREATE ROOM",fr:"CRÉER SALLE"},"ENTRA IN STANZA":{en:"JOIN ROOM",fr:"REJOINDRE SALLE"},"INIZIA PARTITA - GIOCA ORA":{en:"START GAME - PLAY NOW",fr:"COMMENCER - JOUE MAINTENANT"},"Aspetto amici...":{en:"Waiting friends...",fr:"J'attends des amis..."},"C'è:":{en:"There is:",fr:"Il y a :"},"Aspetta che l'host prema INIZIA PARTITA...":{en:"Wait for host to press START...",fr:"Attends que l'hôte appuie COMMENCER..."},"WHATSAPP":{en:"WHATSAPP",fr:"WHATSAPP"},"COPIA CODICE":{en:"COPY CODE",fr:"COPIER CODE"},"Collegato!":{en:"Connected!",fr:"Connecté !"},"Amico collegato!":{en:"Friend connected!",fr:"Ami connecté !"},"Stanza creata! Codice:":{en:"Room created! Code:",fr:"Salle créée ! Code :"},"Errore stanza:":{en:"Room error:",fr:"Erreur salle :"},"Codice non valido! Deve essere RE-XXXX":{en:"Invalid code! Must be RE-XXXX",fr:"Code invalide ! Doit être RE-XXXX"},"Stanza non trovata! Controlla il codice, l'host deve stare online":{en:"Room not found! Check code, host must be online",fr:"Salle introuvable ! Vérifie le code, l'hôte doit être en ligne"},"Vuoi entrare nella stanza":{en:"Do you want to join room",fr:"Veux-tu rejoindre la salle"},"Collegato all'host!":{en:"Connected to host!",fr:"Connecté à l'hôte !"},"Aspetta che l'host prema INIZIA PARTITA":{en:"Wait for host to press START",fr:"Attends que l'hôte appuie COMMENCER"},"Partita online con":{en:"Online game with",fr:"Partie en ligne avec"},"iniziata! Tocca a te!":{en:"started! Your turn!",fr:"commencée ! À toi !"},"Non c'è ancora nessun amico in stanza! Vuoi giocare da solo con i BOT?":{en:"No friend in room yet! Play alone vs BOTS?",fr:"Aucun ami dans la salle ! Jouer seul contre BOTS ?"},"AGGIUNGI AMICO":{en:"ADD FRIEND",fr:"AJOUTER AMI"},"ESCI":{en:"EXIT",fr:"QUITTER"},"CHIUDI":{en:"CLOSE",fr:"FERMER"}};
+var DYN=[["TOCCA A TE!","YOUR TURN!","C'EST À TOI !"],["TOCCA A TE","YOUR TURN","C'EST À TOI"],["HAI VINTO!","YOU WON!","TU AS GAGNÉ !"],["HAI FINITO!","YOU FINISHED!","TU AS FINI !"],["TURNO DI:","TURN OF:","TOUR DE :"],["IN ATTESA...","WAITING...","EN ATTENTE..."],["DISTRIBUZIONE...","DEALING...","DISTRIBUTION..."],["Mescolo...","Shuffling...","Mélange..."],["Inizia","Starts","Commence"],["Peschi","You draw","Tu pioches"],["Pesca","Draw","Pioche"],["Hai parato il 7!","You blocked the 7!","Tu as bloqué le 7 !"],["Hai parato il JOLLY!","You blocked the JOLLY!","Tu as bloqué le JOLLY !"],["HA DIMENTICATO TCHECK!","FORGOT TCHECK!","A OUBLIÉ TCHECK !"],["HA DIMENTICATO GAMES!","FORGOT GAMES!","A OUBLIÉ GAMES !"],["GAMES! HA FINITO!","GAMES! FINISHED!","GAMES ! FINI !"],["TCHECK!","TCHECK!","TCHECK !"],["GAMES!","GAMES!","GAMES !"],["J COMANDA","J COMMANDS","J COMMANDE"],["Scegli il seme:","Choose the suit:","Choisis la couleur :"],["COMANDA","COMMANDS","COMMANDE"],["Tempo scaduto!","Time's up!","Temps écoulé !"],["Aspetta...","Wait...","Attends..."],["sta giocando","is playing","est en train de jouer"],["gioca","plays","joue"],["JOLLY ROSSO","RED JOLLY","JOLLY ROUGE"],["JOLLY NERO","BLACK JOLLY","JOLLY NOIR"],["MOSSA PERFETTA!","PERFECT MOVE!","COUP PARFAIT !"],["MOSSA PERFETTA IN CORSO:","PERFECT MOVE IN PROGRESS:","COUP PARFAIT EN COURS :"],["carte di fila","cards in a row","cartes d'affilée"],["Devi giocare","You must play","Tu dois jouer"],["Non puoi giocare questa!","You can't play this!","Tu ne peux pas jouer ça !"],["La J si butta SOLO con stesso seme","J only with same suit","J seulement avec même couleur"],["SCUDO! Non peschi!","SHIELD! You don't draw!","BOUCLIER ! Tu ne pioches pas !"],["DOPPIA! Butta ancora una carta!","DOUBLE! Play another card!","DOUBLE ! Joue encore une carte !"],["JOLLY SHOP! Butta QUALSIASI carta!","JOLLY SHOP! Play ANY card!","JOLLY SHOP ! Joue N'IMPORTE quelle carte !"],["SCUDO si usa quando devi pescare!","SHIELD when you must draw!","BOUCLIER quand tu dois piocher !"],["HAI 1 CARTA! PREMI TCHECK!","YOU HAVE 1 CARD! PRESS TCHECK!","TU AS 1 CARTE ! APPUIE TCHECK !"],["Clicca una carta gialla!","Click a yellow card!","Clique une carte jaune !"],["JOLLY! Solo","JOLLY! Only","JOLLY ! Seulement"],["ROSSE","RED","ROUGES"],["NERE","BLACK","NOIRES"],["Solo il 1° sale!","Only 1st goes up!","Seul le 1er monte !"],["Sei","You are","Tu es"],["Rivincita?","Rematch?","Revanche ?"],["CLASSIFICA FINALE","FINAL RANKING","CLASSEMENT FINAL"],["SEI IL CAMPIONE","YOU ARE THE CHAMPION","TU ES LE CHAMPION"],["CAMPIONE!","CHAMPION!","CHAMPION !"],["LIVELLO SUPERATO!","LEVEL PASSED!","NIVEAU RÉUSSI !"],["HAI VINTO L'INFERNO!","YOU WON HELL!","TU AS GAGNÉ L'ENFER !"],["Grande","Great","Bravo"],["Sei il RE!","You are the KING!","Tu es le ROI !"],["MANO","HAND","MANCHE"],["LIVELLO","LEVEL","NIVEAU"],["AVVERS.","OPP.","ADV."],["TU","YOU","TOI"],["FINITO","FINISHED","FINI"],["VAI AL LIVELLO","GO TO LEVEL","VA AU NIVEAU"],["RIPROVA LIVELLO","RETRY LEVEL","RÉESSAYER NIVEAU"],["NUOVO CAMPIONATO","NEW CHAMPIONSHIP","NOUVEAU CHAMPIONNAT"],["PROSSIMA MANO","NEXT HAND","MANCHE SUIVANTE"]];
+function trDyn(s){if(!s||curLang==="it")return s;var out=""+s;for(var i=0;i<DYN.length;i++){if(out.indexOf(DYN[i][0])>=0)out=out.split(DYN[i][0]).join(curLang==="en"?DYN[i][1]:DYN[i][2]);}for(var k in DICT){if(out.indexOf(k)>=0)out=out.split(k).join(DICT[k][curLang]||k);}for(var k2 in PHRASE){if(out.indexOf(k2)>=0&&PHRASE[k2][curLang])out=out.split(k2).join(PHRASE[k2][curLang]);}return out;}
+function setLang(l){curLang=l;try{localStorage.setItem("tcheck_lang",l);}catch(e){}var el=document.getElementById("langL");if(el)el.textContent=l==="it"?"Ora: 🇮🇹 ITALIANO":l==="en"?"Now: 🇬🇧 ENGLISH":"Maintenant: 🇫🇷 FRANÇAIS";applyLang();renderStats();if(typeof players!=="undefined"&&players&&players.length)render();}
+function applyLang(){var all=document.querySelectorAll("body *");for(var i=0;i<all.length;i++){var el=all[i];if(!el.dataset.orig&&el.childNodes.length===1&&el.childNodes[0].nodeType===3){el.dataset.orig=el.textContent;}if(el.dataset.orig){var t=trDyn(el.dataset.orig);if(el.textContent!==t)el.textContent=t;}}if(document.getElementById("shopP")&&document.getElementById("shopP").className.indexOf("show")>=0)renderShop();if(document.getElementById("magP")&&document.getElementById("magP").className.indexOf("show")>=0)renderMag();if(document.getElementById("misP")&&document.getElementById("misP").className.indexOf("show")>=0)renderMis();if(document.getElementById("troP")&&document.getElementById("troP").className.indexOf("show")>=0)renderTro();}
+
+// ===== PARTE 2 - VARIABILI =====
+var coins=1050, xp=0, lvl=5, games=0, wins=0, firsts=0, perfects=0, perfectStreak=0, shieldBlocks=0, jollyBlocks=0, champPoints=0, champGoal=15, mode="veloce", playersN=2, music="classica", soundOn=true, sugOn=true, theme="3", myItems=["base"], equipped="base", dailyDone=false, streakDays=1, myChampWins=0;
+var deck=[], disc=[], players=[], center=null, cur=0, over=false, turnTimer=null, timeLeft=30, mustDraw=0, jollyColor=null, commandedSuit=null, doubleActive=false, saidT={}, saidG={}, scores=[], handStats={perf:0};
+var NAMES=["MARIO","LUCA","GIULIA","SARA","ALEX","EMMA","LEO","NINA"];
+var SHOP=[{id:"shield",name:"🛡️ SCUDO",desc:"1 volta non peschi",price:800},{id:"double",name:"🔥 DOPPIA",desc:"Butti 2 carte",price:1200},{id:"jollyshop",name:"⭐ JOLLY SHOP",desc:"Butti qualsiasi carta",price:1500},{id:"back1",name:"🎴 Dorso FUOCO",desc:"Per sempre",price:500},{id:"back2",name:"💎 Dorso DIAMANTE",desc:"Per sempre",price:700},{id:"back3",name:"💎 Dorso DIAMANTE PRO",desc:"Per sempre",price:1000},{id:"back4",name:"🔥 Dorso INFERNO",desc:"Per sempre",price:1500},{id:"back5",name:"👑 Dorso CAMPIONE",desc:"Vinci Campionato",price:0},{id:"avatar1",name:"⚡ Avatar FULMINE",desc:"Per sempre",price:600},{id:"title1",name:"👑 Titolo IL RE",desc:"Per sempre",price:900},{id:"table1",name:"✨ Tavolo NEON",desc:"Per sempre",price:800},{id:"crown",name:"👑 CORONA D'ORO",desc:"Per sempre",price:2000}];
+var TRO=[{id:"t1",name:"PRIMA VITTORIA",desc:"Vinci 1 partita",need:1,emo:"🏆"},{id:"t2",name:"SERIE DI 3",desc:"Vinci 3 di fila",need:3,emo:"🔥"},{id:"t3",name:"SCUDO DEL 7",desc:"Para 5 volte il 7",need:5,emo:"🛡️"},{id:"t4",name:"MAESTRO JOLLY",desc:"Para 3 JOLLY",need:3,emo:"⭐"},{id:"t5",name:"PERFETTO",desc:"Fai 1 Mossa Perfetta",need:1,emo:"✨"},{id:"t6",name:"RE DI TCHECK",desc:"Vinci 10 partite",need:10,emo:"👑"}];
+var MIS=[{id:"m1",name:"Vinci 1 partita",desc:"Vinci 1 partita",need:1,reward:100},{id:"m2",name:"Invita 1 amico",desc:"Invita 1 amico",need:1,reward:100},{id:"m3",name:"Sfida di Oggi",desc:"Completa sfida",need:1,reward:50},{id:"m4",name:"3 Mosse Perfette di fila",desc:"Fai 3 perfette",need:3,reward:200}];
+var misProg={m1:0,m2:0,m3:0,m4:0}, misDone={};
+
+// ===== DECK =====
+function buildDeck(){deck=[];var suits=["♥️","♦️","♣️","♠️"];var vals=["A","2","3","4","5","6","7","8","9","10","J","Q","K"];for(var s=0;s<4;s++)for(var v=0;v<13;v++)deck.push({v:vals[v],s:suits[s]});deck.push({v:"JOLLY",s:"🔴",jolly:"red"});deck.push({v:"JOLLY",s:"⚫",jolly:"black"});}
+function shuffleDeck(){for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=deck[i];deck[i]=deck[j];deck[j]=t;}}
+function cardColor(c){if(c.jolly)return c.jolly==="red"?"red":"black";return(c.s==="♥️"||c.s==="♦️")?"red":"black";}
+function isSeven(c){return c.v==="7";}
+function isJolly(c){return c.v==="JOLLY";}
+function isJack(c){return c.v==="J";}
+function isAce(c){return c.v==="A";}
+
+// ===== START GAME - CORRETTO: ONLINE vs BOT =====
+function startGame(){
+  if(myRoom && conn && conn.open && window.roomFriend){ startGameOnline(); return; }
+  if(myRoom && !window.roomFriend){ if(!confirm(trDyn("Non c'è ancora nessun amico in stanza! Vuoi giocare da solo con i BOT?"))) return; }
+  startGameBot();
+}
+function startGameBot(){
+  buildDeck(); shuffleDeck(); disc=[]; players=[]; scores=[]; saidT={}; saidG={}; mustDraw=0; jollyColor=null; commandedSuit=null; doubleActive=false; handStats={perf:0};
+  var total=playersN; for(var p=0;p<total;p++){ players.push(deck.splice(0,4)); scores.push(0); }
+  center=deck.pop(); disc.push(center); cur=0; over=false;
+  document.getElementById("lobby").style.display="none"; document.getElementById("game").style.display="flex";
+  document.getElementById("oppN").textContent=trDyn("TAVOLO");
+  // Nomi avversari
+  var oppsEl=document.getElementById("opps"); oppsEl.innerHTML="";
+  for(var i=1;i<total;i++){ var d=document.createElement("div"); d.className="op2"; d.id="opp"+i; d.innerHTML="<b>"+NAMES[(i-1)%NAMES.length]+"</b><div>🃏 <span id='oc"+i+"'>4</span></div>"; oppsEl.appendChild(d); }
+  document.getElementById("modeB").textContent=mode==="veloce"?"⚡ "+trDyn("Veloce"):mode==="campionato"?"🏆 "+trDyn("CAMPIONATO"):mode==="carriera"?"🎯 "+trDyn("CARRIERA"):"🔥 "+trDyn("INFERNO");
+  setMsg(trDyn("Inizia")+" "+(document.getElementById("myName").value||"LE DUC")+"! "+trDyn("Tocca a te")+"!");
+  startTimer(); render();
+}
+function startGameOnline(){
+  buildDeck(); shuffleDeck(); disc=[]; players=[]; scores=[0,0]; saidT={}; saidG={}; mustDraw=0; jollyColor=null; commandedSuit=null; doubleActive=false;
+  var myCards=deck.splice(0,4); var friendCards=deck.splice(0,4); center=deck.pop(); disc.push(center); cur=0; over=false;
+  conn.send({type:"start",yourCards:friendCards,center:center,deckCount:deck.length,hostName:document.getElementById("myName").value||"LE DUC"});
+  setupOnlineGame(myCards,center,window.roomFriend||"AMICO");
+}
+function setupOnlineGame(myCards,centerCard,opponentName){
+  players=[myCards,[{v:"?",s:"?"},{v:"?",s:"?"},{v:"?",s:"?"},{v:"?",s:"?"}]]; scores=[0,0]; center=centerCard; disc=[centerCard]; cur=0; over=false; saidT={}; saidG={};
+  document.getElementById("lobby").style.display="none"; document.getElementById("game").style.display="flex";
+  document.getElementById("oppN").textContent=opponentName;
+  var oppsEl=document.getElementById("opps"); oppsEl.innerHTML="<div class='op2'><b>"+opponentName+"</b><div>🃏 <span id='oc1'>4</span></div></div>";
+  document.getElementById("modeB").textContent="👥 ONLINE";
+  setMsg(trDyn("Partita online con")+" "+opponentName+" "+trDyn("iniziata! Tocca a te!"));
+  startTimer(); render();
+}
+function onNetData(d){
+  if(!d) return;
+  if(d.type==="start"){ window.roomFriend=d.hostName; setupOnlineGame(d.yourCards,d.center,d.hostName); }
+  if(d.type==="move"){ // amico ha giocato
+    if(players[1]) players[1].pop();
+    center=d.card; disc.push(d.card); cur=0; setMsg(d.hostName+" "+trDyn("gioca")+" "+d.card.v); checkPerfectOnline(d); render(); startTimer();
+  }
+  if(d.type==="draw"){ if(players[1]) players[1].push({v:"?",s:"?"}); render(); }
+  if(d.type==="emo"){ showToast(d.emo); }
+  if(d.type==="end"){ endGame(d.winner); }
+}
+function checkPerfectOnline(d){ /* perfetta online semplificata */ }
+
+// ===== TIMER =====
+function startTimer(){ clearInterval(turnTimer); timeLeft=mode==="inferno"?10:30; updTimer(); turnTimer=setInterval(function(){ timeLeft--; updTimer(); if(timeLeft<=0){ clearInterval(turnTimer); if(cur===0){ setMsg(trDyn("Tempo scaduto!")+" "+trDyn("Peschi")+" 1"); drawCard(true); } } },1000); }
+function updTimer(){ var el=document.getElementById("tm"); if(el) el.textContent=timeLeft; var box=document.getElementById("tmBox"); if(box) box.className="tm"+(timeLeft<=10?" u":""); }
+function stopTimer(){ clearInterval(turnTimer); }
+
+// ===== RENDER =====
+function setMsg(t){ var el=document.getElementById("msg"); if(el) el.textContent=trDyn(t); }
+function render(){
+  var handEl=document.getElementById("hand"); if(!handEl) return; handEl.innerHTML="";
+  var me=players[0]||[]; document.getElementById("myC").textContent=me.length;
+  document.getElementById("deckC").textContent=deck.length; document.getElementById("discC").textContent=disc.length;
+  document.getElementById("sc1").textContent=scores[0]||0; document.getElementById("sc2").textContent=scores[1]||0;
+  document.getElementById("scC").textContent="1";
+  // Centro
+  var cEl=document.getElementById("center"); cEl.innerHTML=""; cEl.appendChild(makeCardEl(center));
+  // Avversari count
+  for(var i=1;i<players.length;i++){ var oc=document.getElementById("oc"+i); if(oc) oc.textContent=players[i].length; var oel=document.getElementById("opp"+i); if(oel) oel.className="op2"+(cur===i?" act":""); }
+  // Turno
+  var turnEl=document.getElementById("turn"); if(turnEl) turnEl.textContent=cur===0?trDyn("TOCCA A TE!"):trDyn("TURNO DI:")+" "+(cur===1&&window.roomFriend?window.roomFriend:NAMES[(cur-1)%NAMES.length]);
+  document.getElementById("banner").textContent=cur===0?trDyn("TOCCA A TE!"):trDyn("Aspetta...")+" "+(window.roomFriend||NAMES[0]);
+  // Mano mia - evidenzia giocabili
+  for(var k=0;k<me.length;k++){ var card=me[k]; var el=makeCardEl(card); if(cur===0 && canPlay(card)) el.className+=" pl"; el.onclick=(function(c){ return function(){ playCard(c); }; })(card); handEl.appendChild(el); }
+  // Contatori shop
+  document.getElementById("nSh").textContent=countItem("shield"); document.getElementById("nDo").textContent=countItem("double"); document.getElementById("nJo").textContent=countItem("jollyshop");
+  // Suggerimento
+  if(sugOn && cur===0 && me.length===1) setMsg(trDyn("HAI 1 CARTA! PREMI TCHECK!"));
+  applyLang();
+}
+function makeCardEl(c){
+  var d=document.createElement("div"); if(!c||c.v==="?"){ d.className="cd bk"; d.innerHTML="🂠"; return d; }
+  d.className="cd"+(cardColor(c)==="red"?" red":"")+(isJolly(c)?(c.jolly==="red"?" jr":" jb"):"");
+  if(isJolly(c)) d.innerHTML="<div class='bg'>🃏</div><div style='font-size:10px'>"+(c.jolly==="red"?trDyn("JOLLY ROSSO"):trDyn("JOLLY NERO"))+"</div>";
+  else d.innerHTML="<div>"+c.v+" "+c.s+"</div><div class='bg'>"+c.s+"</div><div style='font-size:10px'>"+c.v+"</div>";
+  return d;
+}
+function canPlay(c){
+  if(!center) return true;
+  if(commandedSuit){ if(c.s===commandedSuit||isJack(c)||isJolly(c)) return true; return false; }
+  if(isJolly(center)){ // dopo jolly: colore opposto
+    if(jollyColor==="red" && cardColor(c)==="black") return true;
+    if(jollyColor==="black" && cardColor(c)==="red") return true;
+    if(isJolly(c)) return true;
+    return false;
+  }
+  if(isSeven(center)){ if(isSeven(c)||isJolly(c)) return true; if(mustDraw>0) return false; }
+  if(isJack(center)){ return false; } // J comanda, gestito da commandedSuit
+  if(c.v===center.v) return true;
+  if(cardColor(c)===cardColor(center)) return true;
+  if(isJolly(c)) return true;
+  if(isJack(c) && c.s===center.s) return true;
+  return false;
+}
+function canPlayAny(){
+  var me=players[0]||[]; for(var i=0;i<me.length;i++) if(canPlay(me[i])) return true; return false;
+}
+
+// ===== GIOCA CARTA =====
+function playCard(c){
+  if(over||cur!==0) return;
+  if(!canPlay(c)){ setMsg(trDyn("Non puoi giocare questa!")); return; }
+  // Perfetta: controlla se è 3+ di fila stesso colore/numero? Semplificato: se giochi e avevi 2 carte dello stesso colore di fila
+  var me=players[0]; var idx=me.indexOf(c); if(idx<0) return;
+  me.splice(idx,1); var prevCenter=center; center=c; disc.push(c);
+  // Effetti
+  var drawNext=0; var skipNext=false;
+  if(isSeven(c)){ drawNext=2; mustDraw=2; setMsg("7 CHECK! "+trDyn("Peschi")+" 2"); }
+  if(isJolly(c)){ drawNext=4; mustDraw=4; jollyColor=c.jolly; setMsg(trDyn("JOLLY!")+ " "+trDyn("Peschi")+" 4"); }
+  if(isJack(c)){ commandedSuit=null; document.getElementById("suitBox").style.display="block"; setMsg(trDyn("J COMANDA")); render(); return; } // aspetta scelta seme
+  if(isAce(c)){ skipNext=true; setMsg("ASSO! "+trDyn("Rivincita?")+" - "+trDyn("TOCCA A TE!")); }
+  // Controlla TCHECK / GAMES
+  if(me.length===1 && !saidT[0]){ setMsg(trDyn("HA DIMENTICATO TCHECK!")); me.push(deck.pop(), deck.pop()); }
+  if(me.length===0){ winGame(0); return; }
+  // Manda online
+  if(myRoom && conn && conn.open){ conn.send({type:"move",card:c,hostName:document.getElementById("myName").value||"LE DUC"}); }
+  // Passa turno
+  if(skipNext){ cur=0; }
+  else { cur=1; }
+  commandedSuit=null; jollyColor=null; mustDraw=0;
+  if(cur!==0){ setTimeout(botTurn,900); }
+  render(); startTimer();
+}
+function chooseSuit(s){
+  commandedSuit=s; document.getElementById("suitBox").style.display="none"; setMsg(trDyn("J COMANDA")+" "+s);
+  if(myRoom && conn && conn.open) conn.send({type:"move",card:center,hostName:"HOST"});
+  cur=1; if(cur!==0) setTimeout(botTurn,900); render(); startTimer();
+}
+function drawCard(auto){
+  if(over||cur!==0) return;
+  if(canPlayAny() && !auto){ setMsg(trDyn("Devi giocare")+"! "+trDyn("Clicca una carta gialla!")); return; }
+  var n= mustDraw>0? mustDraw : 1;
+  for(var i=0;i<n;i++){ if(deck.length===0) reshuffle(); players[0].push(deck.pop()); }
+  mustDraw=0; setMsg(trDyn("Peschi")+" "+n);
+  if(myRoom && conn && conn.open) conn.send({type:"draw"});
+  cur=1; setTimeout(botTurn,900); render(); startTimer();
+}
+function reshuffle(){ var top=disc.pop(); deck=disc; disc=[top]; shuffleDeck(); }
+function botTurn(){
+  if(over) return;
+  // In online, il bot non gioca, aspetta amico
+  if(myRoom && window.roomFriend){ return; }
+  for(var p=1;p<players.length;p++){
+    if(cur!==p) continue;
+    var hand=players[p]; var played=null;
+    for(var i=0;i<hand.length;i++){ if(canPlay(hand[i])){ played=hand[i]; break; } }
+    if(played){
+      hand.splice(hand.indexOf(played),1); center=played; disc.push(played);
+      setMsg(NAMES[(p-1)%NAMES.length]+" "+trDyn("gioca")+" "+played.v);
+      if(hand.length===0){ winGame(p); return; }
+      // Effetti semplici bot: 7 e Jolly fanno pescare te
+      if(isSeven(played)){ players[0].push(deck.pop(), deck.pop()); setMsg("7! "+trDyn("Peschi")+" 2"); }
+      if(isJolly(played)){ for(var k=0;k<4;k++) players[0].push(deck.pop()); setMsg("JOLLY! "+trDyn("Peschi")+" 4"); }
+    } else {
+      if(deck.length===0) reshuffle(); hand.push(deck.pop()); setMsg(NAMES[(p-1)%NAMES.length]+" "+trDyn("Peschi")+" 1");
+    }
+    cur=(cur+1)%players.length;
+    if(cur===0){ render(); startTimer(); return; }
+    else { setTimeout(botTurn,900); return; }
+  }
+}
+function sayT(){ saidT[0]=true; setMsg(trDyn("TCHECK!")); }
+function sayG(){ saidG[0]=true; setMsg(trDyn("GAMES!")); if(players[0].length===0) winGame(0); }
+function sendEmo(e){ showToast(e); if(myRoom && conn && conn.open) conn.send({type:"emo",emo:e}); }
+function showToast(e){ var t=document.getElementById("toast"); if(!t) return; t.style.display="block"; document.getElementById("toastT").textContent=e; setTimeout(function(){ t.style.display="none"; },1200); }
+
+// ===== POTENZIAMENTI =====
+function countItem(id){ var n=0; for(var i=0;i<myItems.length;i++) if(myItems[i]===id) n++; return n; }
+function useShield(){ if(countItem("shield")<=0){ alert(trDyn("Non hai SCUDO! 800")); return; } if(mustDraw===0){ alert(trDyn("SCUDO si usa quando devi pescare!")); return; } myItems.splice(myItems.indexOf("shield"),1); mustDraw=0; setMsg(trDyn("SCUDO! Non peschi!")); render(); }
+function useDouble(){ if(countItem("double")<=0){ alert(trDyn("Hai gia usato DOPPIA!")); return; } if(doubleActive){ alert(trDyn("Hai gia usato DOPPIA!")); return; } myItems.splice(myItems.indexOf("double"),1); doubleActive=true; setMsg(trDyn("DOPPIA! Butta ancora una carta!")); render(); }
+function useJolly(){ if(countItem("jollyshop")<=0){ alert(trDyn("Non hai JOLLY SHOP!")); return; } myItems.splice(myItems.indexOf("jollyshop"),1); setMsg(trDyn("JOLLY SHOP! Butta QUALSIASI carta!")); // per 1 turno puoi buttare qualsiasi: svuota commanded
+  commandedSuit=null; jollyColor=null; var me=players[0]; for(var i=0;i<me.length;i++){ var el=document.querySelectorAll("#hand .cd")[i]; if(el) el.className+=" pl"; } render(); }
+
+// ===== FINE PARTITA =====
+function winGame(winner){
+  over=true; stopTimer(); games++; var isMe=winner===0;
+  if(isMe){ wins++; if(winner===0) firsts++; xp+=20; coins+=50; champPoints+=3; misProg.m1++; perfects+=handStats.perf>0?1:0; }
+  else { champPoints+=0; }
+  saveAll(); showPodium(isMe,winner);
+}
+function endGame(winner){ over=true; stopTimer(); showPodium(winner===0,winner); }
+function showPodium(isMe,winner){
+  var names=[]; names.push(document.getElementById("myName").value||"LE DUC"); for(var i=1;i<players.length;i++) names.push(window.roomFriend||NAMES[(i-1)%NAMES.length]);
+  var order=[]; for(var i=0;i<players.length;i++) order.push(i); order.sort(function(a,b){ return players[a].length-players[b].length; });
+  var hero=document.getElementById("podHero"); hero.className="hero"+(isMe?"":" lose");
+  document.getElementById("podEmo").textContent=isMe?"🏆":"😅"; document.getElementById("podTit").textContent=isMe?trDyn("HAI VINTO!"):trDyn("HAI FINITO!"); document.getElementById("podSub").textContent=isMe?trDyn("Grande")+" "+names[0]+"!":trDyn("Sei")+" "+(order.indexOf(0)+1)+"°";
+  var pw=document.getElementById("podW"); pw.innerHTML="";
+  for(var k=0;k<order.length;k++){ var idx=order[k]; var col=document.createElement("div"); col.className="pcol p"+(k+1); col.innerHTML="<div class='pn'>"+names[idx]+"</div><div class='pb' style='height:"+(90-k*22)+"px'>"+(k+1)+"°</div><div style='font-size:10px;font-weight:800'>"+players[idx].length+" carte</div>"; pw.appendChild(col); }
+  document.getElementById("podL").innerHTML="<div style='text-align:center;font-weight:900'>"+trDyn("CLASSIFICA FINALE")+"</div>";
+  document.getElementById("podS").textContent=trDyn("Hai:")+" "+coins+" 🪙 - "+trDyn("Punti campionato:")+" "+champPoints+" / "+champGoal;
+  if(champPoints>=champGoal){ document.getElementById("podT").style.display="block"; document.getElementById("podT").textContent="🏆 "+trDyn("SEI IL CAMPIONE")+"! +200 🪙"; coins+=200; }
+  else document.getElementById("podT").style.display="none";
+  document.getElementById("podBtn").textContent=trDyn("RIGIOCA!");
+  openPop("podP"); renderStats(); saveAll();
+}
+function podMain(){ closePop("podP"); startGame(); }
+function podHome(){ closePop("podP"); goHome(); }
+function podChange(){ closePop("podP"); openPop("playP"); }
+
+// ===== HOME / POP =====
+function goHome(){ stopTimer(); document.getElementById("game").style.display="none"; document.getElementById("lobby").style.display="flex"; renderStats(); }
+function openPop(id){ document.getElementById(id).className="pop show"; }
+function closePop(id){ document.getElementById(id).className="pop"; }
+function closeMenu(){ closePop("menuP"); }
+function openMenu(){ openPop("menuP"); stopTimer(); }
+function openTut(){ tutStep(0); openPop("tutP"); }
+var tutIdx=0; var TUTS=[{e:"🃏",t:"SCOPO",x:"Butta tutte le tue carte! Inizi con 4 carte. Giochi uguale di SEME o NUMERO. Se non hai niente, PESCHI 1."},{e:"📢",t:"TCHECK E GAMES",x:"Con 1 carta premi TCHECK! Per la ULTIMA carta premi GAMES! Se dimentichi, peschi 2!"},{e:"7️⃣",t:"REGOLA DEL 7",x:"7 RISPONDE A 7 DI QUALSIASI SEME! 7 CHECK pesca 2. JOLLY pesca 4. Il 7 NON para il JOLLY!"},{e:"⭐",t:"JOLLY",x:"JOLLY ROSSO si para con 7 qualsiasi o JOLLY ROSSO. JOLLY NERO con 7 o JOLLY NERO. Dopo JOLLY ROSSO giochi NERA! Dopo JOLLY NERO giochi ROSSA!"},{e:"🃏",t:"J COMANDA",x:"La J si butta SOLO con lo stesso seme del centro, oppure J su J. Il prossimo deve buttare seme comandato, oppure J, oppure JOLLY NERO!"},{e:"✨",t:"MOSSA PERFETTA",x:"3+ carte di fila, stesso colore / numero, senza che avversario butti una carta normale. Nera su nera, rossa su rossa. Oppure stesso numero: 2 su 2, 7 su 7, 8 su 8."},{e:"👑",t:"ALTRI",x:"ASSO salta, ritocca a te. Premi le emoji in partita! MARIO Aggressivo - LUCA Furbo - GIULIA Pazza. CAMPIONATO: 9/15/21/30 - Vittoria +3, 2° +1. INFERNO: timer 10s! NEGOZIO: SCUDO, DOPPIA, JOLLY SHOP"}];
+function tutStep(d){ if(d===0) tutIdx=0; else tutIdx+=d; if(tutIdx<0) tutIdx=0; if(tutIdx>=TUTS.length){ closePop("tutP"); return; } var t=TUTS[tutIdx]; document.getElementById("tutE").textContent=t.e; document.getElementById("tutT").textContent=t.t; document.getElementById("tutX").textContent=trDyn(t.x); document.getElementById("tutD").textContent="●".repeat(tutIdx+1)+"○".repeat(TUTS.length-tutIdx-1); document.getElementById("tutN").textContent=tutIdx===TUTS.length-1?trDyn("FATTO"):trDyn("AVANTI ➡️"); }
+function changeName(){ var n=prompt(trDyn("CAMBIA NOME"), document.getElementById("myName").value); if(n){ document.getElementById("myName").value=n.toUpperCase().slice(0,12); renderStats(); } }
+function pickMode(m){ mode=m; document.querySelectorAll("#modeP .op").forEach(function(e){ e.className="op"; }); document.getElementById("o-"+m).className="op on"; document.getElementById("modeL").textContent=m==="veloce"?"⚡ "+trDyn("Veloce"):m==="campionato"?"🏆 "+trDyn("CAMPIONATO"):m==="carriera"?"🎯 "+trDyn("CARRIERA"):"🔥 "+trDyn("INFERNO"); saveAll(); }
+function pickChamp(n){ champGoal=n; document.querySelectorAll("#modeP .cr button").forEach(function(e){ e.className=""; }); document.getElementById("c-"+n).className="on"; document.getElementById("champL").textContent="🏆 "+trDyn("Punti campionato:")+" "+champPoints+" / "+n; saveAll(); }
+function pickPlay(n){ playersN=n; document.querySelectorAll("#playP .op").forEach(function(e){ e.className="op"; }); document.getElementById("p-"+n).className="op on"; document.getElementById("playL").textContent=n===2?"1vs1 ▸":n+" "+trDyn("GIOCATORI")+" ▸"; saveAll(); }
+function pickMus(m){ music=m; document.querySelectorAll("#musP .op").forEach(function(e){ e.className="op"; }); document.getElementById("m-"+m).className="op on"; document.getElementById("musL").textContent=m==="classica"?"🎹 "+trDyn("Classica"):m==="jazz"?"🎷 Jazz":m==="energetica"?"⚡ "+trDyn("Energetica"):m==="relax"?"🌙 Relax":"🔇 "+trDyn("Nessuna"); }
+function pickTh(t){ theme=t; document.body.setAttribute("data-theme",t); document.getElementById("thL").textContent=trDyn("Ora:")+" "+(t==="1"?"🟢 "+trDyn("CASINÒ"):t==="2"?"🟣 "+trDyn("NEON"):"⚫ "+trDyn("LUXURY")); saveAll(); }
+function togSug(){ sugOn=!sugOn; document.getElementById("sugL").textContent=sugOn?trDyn("Accesi"):trDyn("Spenti"); }
+function togMus(){ music=music==="nessuna"?"classica":"nessuna"; document.getElementById("musL2").textContent=music==="nessuna"?trDyn("Spenta"):trDyn("Accesa"); }
+function togSnd(){ soundOn=!soundOn; document.getElementById("sndL").textContent=soundOn?trDyn("Accesi"):trDyn("Spenti"); }
+function claimDaily(){ if(dailyDone){ alert(trDyn("Hai gia preso il bonus!")); return; } dailyDone=true; coins+=50; misProg.m3++; setMsg("+50 🪙"); saveAll(); renderStats(); alert("+50 🪙"); }
+
+// ===== NEGOZIO / MAGAZZINO / MISSIONI / TROFEI / STATS =====
+function renderShop(){ document.getElementById("shopC").textContent=coins; var g=document.getElementById("shopG"); g.innerHTML=""; for(var i=0;i<SHOP.length;i++){ var it=SHOP[i]; var div=document.createElement("div"); div.className="si"; var owned=countItem(it.id)>0 && (it.id.indexOf("back")===0||it.id.indexOf("avatar")===0||it.id.indexOf("title")===0||it.id.indexOf("table")===0||it.id==="crown"); var canBuy=coins>=it.price && !(it.id==="back5" && champPoints<champGoal); div.innerHTML="<div><b>"+trDyn(it.name)+"</b><small>"+trDyn(it.desc)+"</small></div><button class='sbuy"+(owned?" g":"")+"' onclick=\"buyItem('"+it.id+"')\">"+(owned?trDyn("EQUIPAGGIATO"):it.price===0?trDyn("PREMIO"):trDyn("COMPRA -")+" "+it.price+" 🪙")+"</button>"; g.appendChild(div); } applyLang(); }
+function buyItem(id){ var it=null; for(var i=0;i<SHOP.length;i++) if(SHOP[i].id===id) it=SHOP[i]; if(!it) return; if(id==="back5" && champPoints<champGoal){ alert(trDyn("Vinci un Campionato per sbloccarlo!")); return; } if(countItem(id)>0 && (id.indexOf("back")===0||id==="crown")){ equipped=id; saveAll(); renderShop(); return; } if(coins<it.price){ alert(trDyn("Non hai abbastanza monete!")); return; } coins-=it.price; myItems.push(id); if(id.indexOf("back")===0||id==="crown") equipped=id; saveAll(); renderShop(); renderMag(); }
+function renderMag(){ document.getElementById("magC").textContent=myItems.length+" "+trDyn("oggetti")+" - "+trDyn("Equipaggiato:")+" "+equipped; var g=document.getElementById("magG"); g.innerHTML=""; for(var i=0;i<myItems.length;i++){ var id=myItems[i]; var it=null; for(var k=0;k<SHOP.length;k++) if(SHOP[k].id===id) it=SHOP[k]; var name=it?it.name:id; var div=document.createElement("div"); div.className="si"; div.innerHTML="<div><b>"+trDyn(name)+"</b><small>"+trDyn("PER SEMPRE")+"</small></div><button class='sbuy' onclick=\"equipItem('"+id+"')\">"+(equipped===id?trDyn("EQUIPAGGIATO"):trDyn("EQUIPAGGIA"))+"</button>"; g.appendChild(div); } applyLang(); }
+function equipItem(id){ equipped=id; saveAll(); renderMag(); }
+function renderMis(){ var g=document.getElementById("misG"); g.innerHTML=""; for(var i=0;i<MIS.length;i++){ var m=MIS[i]; var prog=misProg[m.id]||0; var done=prog>=m.need; var div=document.createElement("div"); div.className="si"; div.innerHTML="<div><b>"+trDyn(m.name)+"</b><small>"+prog+" / "+m.need+" - +"+m.reward+" 🪙</small></div><button class='sbuy' onclick=\"claimMis('"+m.id+"')\">"+(done?trDyn("PREMIO"):trDyn("DA FARE"))+"</button>"; g.appendChild(div); } applyLang(); }
+function claimMis(id){ var m=null; for(var i=0;i<MIS.length;i++) if(MIS[i].id===id) m=MIS[i]; if(!m) return; if((misProg[id]||0)>=m.need && !misDone[id]){ misDone[id]=true; coins+=m.reward; saveAll(); renderMis(); renderStats(); alert("+"+m.reward+" 🪙"); } }
+function renderTro(){ var g=document.getElementById("troG"); g.innerHTML=""; var unlocked=0; for(var i=0;i<TRO.length;i++){ var t=TRO[i]; var val=t.id==="t1"?wins:t.id==="t2"?perfectStreak:t.id==="t3"?shieldBlocks:t.id==="t4"?jollyBlocks:t.id==="t5"?perfects:wins; var got=val>=t.need; if(got) unlocked++; var div=document.createElement("div"); div.style.cssText="background:"+(got?"#fef3c7":"#f1f5f9")+";border-radius:14px;padding:10px;text-align:center;opacity:"+(got?"1":".5"); div.innerHTML="<div style='font-size:28px'>"+t.emo+"</div><b style='font-size:11px'>"+trDyn(t.name)+"</b><div style='font-size:10px'>"+trDyn(t.desc)+"</div><div style='font-size:10px;font-weight:900'>"+val+" / "+t.need+"</div>"; g.appendChild(div); } document.getElementById("troC").textContent=unlocked+" / "+TRO.length; applyLang(); }
+function renderStats(){
+  var name=document.getElementById("myName").value||"LE DUC";
+  document.getElementById("cTxt").textContent=coins; document.getElementById("lTxt").textContent=lvl; document.getElementById("xTxt").textContent=xp;
+  document.getElementById("sG").textContent=games; document.getElementById("sW").textContent=wins; document.getElementById("sF").textContent=firsts; document.getElementById("sR").textContent=games?Math.round(wins/games*100)+"%":"0%";
+  document.getElementById("sG2").textContent=games; document.getElementById("sW2").textContent=wins; document.getElementById("sF2").textContent=firsts; document.getElementById("sR2").textContent=games?Math.round(wins/games*100)+"%":"0%";
+  document.getElementById("sD").textContent=trDyn("Tocca a te")+" "+name+"!";
+  document.getElementById("stTit").textContent=name; document.getElementById("stFull").innerHTML=trDyn("Partite:")+" "+games+"<br>"+trDyn("Vinte:")+" "+wins+"<br>"+trDyn("Carriera:")+" "+lvl+"<br>"+trDyn("Serie:")+" "+perfectStreak+"<br>"+trDyn("Mosse Perfette:")+" "+perfects+"<br>"+trDyn("Campionato:")+" "+champPoints+" / "+champGoal+"<br>"+trDyn("Trofei:")+" "+document.getElementById("troC").textContent;
+  document.getElementById("champBar").textContent="🏆 "+trDyn("Campionato:")+" "+champPoints+" / "+champGoal+" - "+trDyn("Trofei:")+" "+document.getElementById("troC").textContent;
+  document.getElementById("pfT").textContent=perfects; document.getElementById("pfS").textContent=perfectStreak;
+  document.getElementById("pTitle").textContent="⭐ 👑 "+name; document.getElementById("pBadge").textContent=lvl>=10?trDyn("LEGGENDA"):lvl>=5?trDyn("CAPITANO"):trDyn("SOLDATO");
+  document.getElementById("pProg").textContent=wins+" / "+(lvl*2)+" "+trDyn("vittorie");
+  document.getElementById("pBar").style.width=Math.min(100,wins/(lvl*2)*100)+"%";
+  document.getElementById("pDesc").textContent=trDyn("Vinci per")+" "+trDyn("SCUDO")+"!";
+  document.getElementById("dTitle").textContent="🎯 "+trDyn("SFIDA DI OGGI"); document.getElementById("dDesc").textContent=trDyn("Vinci 1 partita oggi!"); document.getElementById("dSt").textContent=dailyDone?trDyn("FATTA"):trDyn("DA FARE"); document.getElementById("dProg").textContent=(dailyDone?1:0)+" / 1"; document.getElementById("dBar").style.width=dailyDone?"100%":"0%";
+  document.getElementById("stCode").textContent=makeCode(); document.getElementById("invT").textContent=trDyn("Gioca a TCHECK con me!")+ " "+trDyn("Sono")+" "+name+" "+trDyn("Codice:")+" "+makeCode();
+  document.getElementById("nextO").textContent=playersN===2?"MARIO":playersN===3?"MARIO, LUCA":"MARIO, LUCA, GIULIA";
+  applyLang();
+}
+function makeCode(){ var s={c:coins,x:xp,l:lvl,g:games,w:wins,f:firsts,pf:perfects,cp:champPoints,items:myItems,eq:equipped,n:document.getElementById("myName").value}; return "TCHECK-"+btoa(unescape(encodeURIComponent(JSON.stringify(s)))); }
+function copyCode(){ var code=makeCode(); if(navigator.clipboard) navigator.clipboard.writeText(code).then(function(){ alert(trDyn("COPIA CODICE")+" OK"); }); else prompt(trDyn("COPIA CODICE"),code); }
+function restoreCode(){ var code=prompt(trDyn("RIPRISTINA CODICE")); if(!code) return; try{ var s=JSON.parse(decodeURIComponent(escape(atob(code.replace("TCHECK-",""))))); coins=s.c||coins; xp=s.x||xp; lvl=s.l||lvl; games=s.g||games; wins=s.w||wins; firsts=s.f||firsts; perfects=s.pf||perfects; champPoints=s.cp||champPoints; myItems=s.items||myItems; equipped=s.eq||equipped; if(s.n) document.getElementById("myName").value=s.n; saveAll(); renderStats(); alert("OK"); }catch(e){ alert("Codice non valido"); } }
+function resetStats(){ coins=1050; xp=0; lvl=5; games=0; wins=0; firsts=0; perfects=0; champPoints=0; myItems=["base"]; equipped="base"; dailyDone=false; misProg={m1:0,m2:0,m3:0,m4:0}; saveAll(); renderStats(); }
+function saveAll(){ try{ localStorage.setItem("tcheck_save", JSON.stringify({coins:coins,xp:xp,lvl:lvl,games:games,wins:wins,firsts:firsts,perfects:perfects,champPoints:champPoints,myItems:myItems,equipped:equipped,mode:mode,playersN:playersN,theme:theme})); }catch(e){} }
+function loadAll(){ try{ var s=JSON.parse(localStorage.getItem("tcheck_save")); if(!s) return; coins=s.coins??coins; xp=s.xp??xp; lvl=s.lvl??lvl; games=s.games??games; wins=s.wins??wins; firsts=s.firsts??firsts; perfects=s.perfects??perfects; champPoints=s.champPoints??champPoints; myItems=s.myItems||myItems; equipped=s.equipped||equipped; mode=s.mode||mode; playersN=s.playersN||playersN; theme=s.theme||theme; document.body.setAttribute("data-theme",theme); }catch(e){} }
+loadAll(); renderStats(); setLang(curLang);
+
+// ===== PARTE 3 - ONLINE - FUNZIONA CON INGRID, NON CON BOT =====
+var peer=null, conn=null, isHost=false, myRoom="", myPeerId="";
+
+function makeRoomCode(){
+  var chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; var out="";
+  for(var i=0;i<4;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return "RE-"+out;
+}
+function getGameLink(){
+  if(location.protocol==="file:") return "Apri il gioco su GitHub Pages per avere il link";
+  return location.origin + location.pathname + "?room=" + myRoom;
+}
+function updateRoomUI(){
+  var bar=document.getElementById("roomBar"); if(!bar) return;
+  bar.style.display="block"; document.getElementById("roomCodeTxt").textContent=myRoom;
+  var myName=document.getElementById("myName").value||"LE DUC";
+  var names=trDyn("C'è:")+" "+myName;
+  if(window.roomFriend) names+=", "+window.roomFriend;
+  document.getElementById("roomPlayers").textContent=names;
+  if(isHost && window.roomFriend){
+    document.getElementById("roomStartBtn").style.display="block";
+    document.getElementById("roomWait").style.display="none";
+    document.getElementById("roomPeerTxt").textContent=trDyn("Amico collegato!")+" ✅";
+  } else if(!isHost && myRoom){
+    document.getElementById("roomStartBtn").style.display="none";
+    document.getElementById("roomWait").style.display="block";
+    document.getElementById("roomPeerTxt").textContent=trDyn("Collegato!")+" ✅";
+  } else {
+    document.getElementById("roomStartBtn").style.display="none";
+    document.getElementById("roomWait").style.display="none";
+    document.getElementById("roomPeerTxt").textContent=trDyn("Aspetto amici...");
+  }
+  applyLang();
+}
+function onFriendJoined(name){
+  window.roomFriend=name||"AMICO"; updateRoomUI();
+  alert(trDyn("Amico collegato!")+" "+trDyn("INIZIA PARTITA - GIOCA ORA"));
+}
+
+function createRoom(){
+  myRoom=makeRoomCode(); isHost=true; window.roomFriend=null;
+  updateRoomUI();
+  if(peer) try{peer.destroy();}catch(e){}
+  peer=new Peer("tcheck-"+myRoom);
+  peer.on("open",function(id){ myPeerId=id; alert(trDyn("Stanza creata! Codice:")+" "+myRoom+"\n"+trDyn("Gioca a TCHECK con me!")); });
+  peer.on("connection",function(c){
+    conn=c;
+    conn.on("open",function(){ onFriendJoined("AMICO"); });
+    conn.on("data",function(d){
+      // Quando l'amico si presenta con nome
+      if(d.type==="hello"){ onFriendJoined(d.name); }
+      else onNetData(d);
+    });
+    conn.on("close",function(){ window.roomFriend=null; updateRoomUI(); });
+  });
+  peer.on("error",function(e){ alert(trDyn("Errore stanza:")+" "+e.type+" - "+trDyn("Stanza non trovata! Controlla il codice, l'host deve stare online")); });
+}
+
+function joinRoom(){
+  var code=prompt(trDyn("ENTRA IN STANZA")+" - "+trDyn("Codice:")+" (es. RE-AB12):");
+  if(!code) return; joinRoomWithCode(code);
+}
+function joinRoomWithCode(code){
+  code=(""+code).trim().toUpperCase().replace(/\s/g,"");
+  if(code.indexOf("ROOM=")>=0) code="RE-"+code.split("ROOM=")[1].slice(0,4);
+  if(code.indexOf("RE-")!==0){ alert(trDyn("Codice non valido! Deve essere RE-XXXX")); return; }
+  myRoom=code; isHost=false; window.roomFriend=null; updateRoomUI();
+  if(peer) try{peer.destroy();}catch(e){}
+  peer=new Peer();
+  peer.on("open",function(){
+    conn=peer.connect("tcheck-"+myRoom);
+    conn.on("open",function(){
+      // Mi presento all'host con il mio nome
+      conn.send({type:"hello",name:document.getElementById("myName").value||"AMICO"});
+      document.getElementById("roomPeerTxt").textContent=trDyn("Collegato all'host!")+" ✅";
+      document.getElementById("roomWait").style.display="block";
+      alert(trDyn("Collegato!")+" "+trDyn("Aspetta che l'host prema INIZIA PARTITA..."));
+    });
+    conn.on("data",function(d){ onNetData(d); });
+    conn.on("error",function(){ alert(trDyn("Stanza non trovata! Controlla il codice, l'host deve stare online")); });
+  });
+  peer.on("error",function(e){ alert(trDyn("Errore stanza:")+" "+e.type); });
+}
+
+// ===== INVITA - WHATSAPP / COPIA / CONDIVIDI =====
+function inviteWA(){
+  if(!myRoom) createRoom();
+  var myName=document.getElementById("myName").value||"LE DUC";
+  var link=getGameLink();
+  var txt=trDyn("Gioca a TCHECK con me!")+" 👑\n"+trDyn("Sono")+" "+myName+"\n"+trDyn("Codice:")+" "+myRoom+"\n"+trDyn("Entra qui:")+" "+link+"\n"+trDyn("Oppure incolla il codice in ENTRA IN STANZA");
+  // Bonus invita
+  misProg.m2=(misProg.m2||0)+1; saveAll();
+  window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");
+}
+function inviteCopy(){
+  if(!myRoom) createRoom();
+  var link=getGameLink();
+  var txt=trDyn("Gioca a TCHECK con me!")+" "+trDyn("Codice:")+" "+myRoom+" "+trDyn("Entra qui:")+" "+link;
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ alert(trDyn("COPIA CODICE")+" OK: "+txt); });
+  else prompt(trDyn("COPIA CODICE"),txt);
+  misProg.m2=(misProg.m2||0)+1; saveAll();
+}
+function shareRoom(){
+  if(!myRoom){ alert(trDyn("CREA STANZA")+"!"); return; }
+  inviteWA();
+}
+
+// ===== ENTRA AUTOMATICO DA LINK ?room=RE-XXXX =====
+window.addEventListener("load",function(){
+  try{
+    var p=new URLSearchParams(location.search); var r=p.get("room");
+    if(r){
+      r=r.toUpperCase(); document.getElementById("roomBar").style.display="block"; document.getElementById("roomCodeTxt").textContent=r;
+      setTimeout(function(){ if(confirm(trDyn("Vuoi entrare nella stanza")+" "+r+"?")) joinRoomWithCode(r); },600);
+    }
+  }catch(e){}
+});
+
+// ===== FIX: SE L'AMICO PREME INIZIA, NON PARTE BOT =====
+// startGame() è già in Parte 2 e controlla myRoom + roomFriend
+// Se sei ospite e host preme INIZIA, la partita parte da onNetData(type=start) in Parte 2
+
+// Avvia traduzione finale
+try{ applyLang(); renderStats(); }catch(e){}
+</script></body></html>
